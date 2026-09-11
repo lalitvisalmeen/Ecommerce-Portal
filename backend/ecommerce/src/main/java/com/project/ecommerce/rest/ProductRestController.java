@@ -1,0 +1,32 @@
+package com.project.ecommerce.rest;
+
+import com.project.ecommerce.entity.Product;
+import com.project.ecommerce.service.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api")
+@CrossOrigin(origins = "http://localhost:4200")
+public class ProductRestController {
+
+    private ProductService productService;
+
+    @Autowired
+    public ProductRestController(ProductService productService){
+        this.productService = productService;
+    }
+
+    @GetMapping("/products")
+    public List<Product> getProducts(){
+
+        return productService.findAllProducts();
+    }
+
+    @GetMapping("/products/{productId}")
+    public Product getProductById(@PathVariable int productId){
+        return productService.findProductById(productId);
+    }
+}
