@@ -1043,6 +1043,6 @@ footer ul li{
     }
 }
 
-.add-to-cart-btn{
+.add-to-cart-btn, .category-menu{
     text-decoration: none;
 }

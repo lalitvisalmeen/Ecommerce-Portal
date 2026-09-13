@@ -21,7 +21,7 @@ export class ProductService {
     }
 
     getCategoryList():Observable<ProductCategory[]>{
-        const categoryUrl = `${this.baseUrl}/categories`;
+        const categoryUrl = `${this.categoryBaseUrl}/categories`;
         return this.httpClient.get<ProductCategory[]>(categoryUrl);
     }
 }

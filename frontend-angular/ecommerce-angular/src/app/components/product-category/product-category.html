@@ -3,7 +3,7 @@
         <ul class="list-unstyled navbar-list">
             @for(category of categories(); track category.id){
             <li>
-                <a routerLink="/category/{{ category.id }}/{{ category.categoryName }}" routerLinkActive="active-link">
+                <a routerLink="/category/{{ category.id }}/{{ category.categoryName }}" routerLinkActive="active-link" class="category-menu">
                     {{ category.categoryName}}
                 </a>
             </li>
