@@ -16,6 +16,7 @@ export class ProductList implements OnInit {
   products = signal<Product[]>([]);
   categoryId: number = 1;
   categoryName: string ="";
+  searchMode : boolean = false;
 
   // here we are using constructor injection to inject the product services
   // modern way of doing it is private productService = inject(ProductService)
@@ -30,6 +31,17 @@ export class ProductList implements OnInit {
   }
 
   listProducts() {
+      this.searchMode = this.route.snapshot.paramMap.has("keyword");
+      if(this.searchMode){
+        this.searchProducts();
+      }
+      else{
+        this.getProductList();
+      }
+    
+  }
+
+  getProductList(){
     // check whether the category id exists in the route.
     // the following code is checking the activatedroute in the given state(snapshot) and look for the params(parammap) with the id.
     const hasCategoryId: boolean = this.route.snapshot.paramMap.has("id");
@@ -54,6 +66,19 @@ export class ProductList implements OnInit {
       this.products.set(data.content);
       console.log('AFTER:', this.products.length);
     })
+
+  }
+
+  searchProducts(){
+
+    const searchValue:string  = this.route.snapshot.paramMap.get("keyword")!;
+
+    this.productService.searchProducts(searchValue).subscribe(
+      data => {
+        this.products.set(data.content);
+      }
+    )
+
   }
 
 }

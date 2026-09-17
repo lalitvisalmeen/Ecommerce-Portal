@@ -17,11 +17,20 @@ export class ProductService {
 
     getProductList(categoryId: number): Observable<ProductPage> {
         const searchUrl = `${this.baseUrl}/category/${categoryId}`;
+        return this.getProducts(searchUrl);
+    }
+
+    private getProducts(searchUrl: string): Observable<ProductPage> {
         return this.httpClient.get<ProductPage>(searchUrl);
     }
 
     getCategoryList():Observable<ProductCategory[]>{
         const categoryUrl = `${this.categoryBaseUrl}/categories`;
         return this.httpClient.get<ProductCategory[]>(categoryUrl);
+    }
+
+    searchProducts(searchValue : string) : Observable<ProductPage>{
+        const searchProductUrl = `${this.baseUrl}/search?name=${searchValue}`;
+        return this.getProducts(searchProductUrl);
     }
 }

@@ -17,6 +17,13 @@
                     </div>
                 </div>
                 }
+                <!-- we use safe navigation operator ? to prevent any errors related to null or undefined-->
+                 <!-- so if products is null or undefined or length is 0 then no products found will display-->
+                @if(products()?.length == 0){
+                    <div class="alert alert-warning col-md-12" role="alert">
+                        No Products found
+                    </div>
+                }
             </div>
         </div>
     </div>
