@@ -9,4 +9,6 @@ import org.springframework.data.repository.query.Param;
 public interface ProductRepository extends JpaRepository<Product, Integer> {
 
     Page<Product> findByCategoryId(int id, Pageable pageable);
+
+    Page<Product> findByNameContaining(String name, Pageable pageable);
 }

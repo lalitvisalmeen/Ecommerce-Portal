@@ -37,4 +37,9 @@ public class ProductRestController {
     public Page<Product> findByCategoryId(@PathVariable int categoryId, Pageable pageable){
         return productService.findByCategoryId(categoryId, pageable);
     }
+
+    @GetMapping("/products/search")
+    public Page<Product> searchByName(@RequestParam String name, Pageable pageable){
+        return productService.searchByProductName(name, pageable);
+    }
 }

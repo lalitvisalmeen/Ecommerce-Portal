@@ -15,4 +15,6 @@ public interface ProductService {
 
     Page<Product> findByCategoryId(int id, Pageable pageable);
 
+    Page<Product> searchByProductName(String name, Pageable pageable);
+
 }
