@@ -2,13 +2,12 @@ import { Component, OnInit, signal } from '@angular/core';
 import { Product } from '../../common/product';
 import { CommonModule } from '@angular/common';
 import { ProductService } from '../../services/productservice';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 
 @Component({
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   selector: 'app-product-list',
   styleUrl: './product-list.css',
-  //templateUrl: './product-list-table.html',
   templateUrl: './product-list-grid.html',
 })
 export class ProductList implements OnInit {

@@ -7,13 +7,17 @@
         <div class="container-fluid">
             <div class="row">
                 <!-- Loop over the collection of products -->
-                @for(product of products() ; track $index){
+                @for(product of products() ; track product.id){
                 <div class="col-md-3">
                     <div class="product-box">
-                        <img src="{{ product.imageUrl }}" alt="{{ product.name }}" class="image-responsive">
-                        <h1>{{ product.name }}</h1>
+                            <a routerLink="/products/{{ product.id }}" class="text-decoration-none d-block">
+                                <img src="{{ product.imageUrl }}" alt="{{ product.name }}" class="image-responsive">
+                            </a>
+                            <a routerLink="/products/{{ product.id }}" class="text-decoration-none d-block text-dark">
+                                <h1>{{ product.name }}</h1>
+                            </a>
                         <div class="price">{{ product.unitPrice | currency:'USD'}}</div>
-                        <a href="#" class="primary-btn add-to-cart-btn">Add to cart</a>
+                        <a href="#" class="primary-btn text-decoration-none">Add to cart</a>
                     </div>
                 </div>
                 }

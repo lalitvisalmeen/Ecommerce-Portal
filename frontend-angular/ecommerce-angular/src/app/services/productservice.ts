@@ -3,6 +3,7 @@ import { inject, Service } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ProductPage } from '../models/product-page';
 import { ProductCategory } from '../common/product-category/product-category';
+import { Product } from '../common/product';
 
 @Service()
 export class ProductService {
@@ -32,5 +33,10 @@ export class ProductService {
     searchProducts(searchValue : string) : Observable<ProductPage>{
         const searchProductUrl = `${this.baseUrl}/search?name=${searchValue}`;
         return this.getProducts(searchProductUrl);
+    }
+
+    getProductDetails(productId : number) : Observable<Product>{
+        const getProductUrl = `${this.baseUrl}/${productId}`;
+        return this.httpClient.get<Product>(getProductUrl);
     }
 }
