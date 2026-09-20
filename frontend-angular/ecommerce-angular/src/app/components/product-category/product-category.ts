@@ -1,7 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { ProductCategory } from '../../common/product-category/product-category';
-import { RouterLink, RouterLinkActive } from '@angular/router';
 import { ProductService } from '../../services/productservice';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
   imports: [RouterLink, RouterLinkActive],

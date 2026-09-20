@@ -3,9 +3,10 @@ import { Product } from '../../common/product';
 import { CommonModule } from '@angular/common';
 import { ProductService } from '../../services/productservice';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, NgbPagination],
   selector: 'app-product-list',
   styleUrl: './product-list.css',
   templateUrl: './product-list-grid.html',
@@ -14,8 +15,16 @@ export class ProductList implements OnInit {
   // products : Product[] = [];
   products = signal<Product[]>([]);
   categoryId: number = 1;
+  previousCategoryId : number = 1;
   categoryName: string ="";
   searchMode : boolean = false;
+
+  // pagination fields
+  pageNumber = signal<number>(1);
+  pageSize = signal<number>(5);
+  pageTotalElements = signal<number>(0);
+
+  //previousKeyword = "";
 
   // here we are using constructor injection to inject the product services
   // modern way of doing it is private productService = inject(ProductService)
@@ -25,7 +34,10 @@ export class ProductList implements OnInit {
   // once this component is initialized then this method will execute like we had postconstructor in spring boot
   ngOnInit(): void {
     this.route.paramMap.subscribe(() =>
-      this.listProducts()
+    {
+      console.log("search is changed");
+      this.listProducts();
+    }
     );
   }
 
@@ -50,21 +62,28 @@ export class ProductList implements OnInit {
       // use the + operator to convert the string value to number
       // use the ! in the end to tell it is not null. it is called typescript null assertion
       this.categoryId = +this.route.snapshot.paramMap.get("id")!;
+      // To display the category name, when the user clicks on the category and view the products
       const hasCategoryName : boolean = this.route.snapshot.paramMap.has("name");
       if(hasCategoryName){
         this.categoryName = this.route.snapshot.paramMap.get("name")!;
       }
     }
 
+    // if the category id in the url is different than the previousCategoryId then reset the page number to 1
+    if(this.previousCategoryId != this.categoryId){
+      this.pageNumber.set(1);
+    }
+
+    // update the previousCategoryId to currentCategory id
+    this.previousCategoryId = this.categoryId;
+    console.log(`previouscategoryId=${this.previousCategoryId},currentCategoryId=${this.categoryId}, pagenumber=${this.pageNumber()}`)
+
+
     // now we have to get the products for the categoryId
     // here the subscribe will wait till it receives the data. the http call is the 
     // asynchronous function, and the observable said wait for my response
-    this.productService.getProductList(this.categoryId).subscribe(data => {
-      console.log('BEFORE:', this.products.length);
-
-      this.products.set(data.content);
-      console.log('AFTER:', this.products.length);
-    })
+    this.productService.getProductList(this.pageNumber() - 1,this.pageSize(), this.categoryId)
+                        .subscribe(this.setProductResults())
 
   }
 
@@ -72,12 +91,31 @@ export class ProductList implements OnInit {
 
     const searchValue:string  = this.route.snapshot.paramMap.get("keyword")!;
 
-    this.productService.searchProducts(searchValue).subscribe(
-      data => {
-        this.products.set(data.content);
-      }
-    )
+    // if(this.previousKeyword != searchValue){
+    //   this.pageNumber.set(1);
+    // }
 
+    // this.previousKeyword = searchValue;
+    // console.log(`searchvalue= ${searchValue}, pagenumber = ${this.pageNumber()}`);
+
+    this.productService.searchProducts(this.pageNumber() - 1, this.pageSize(), searchValue)
+                        .subscribe(this.setProductResults())
+
+  }
+
+  updatePageSize(pageSize : string){
+      this.pageSize.set(+pageSize);
+      this.pageNumber.set(1);
+      this.listProducts();
+  }
+
+  setProductResults(){
+    return ((data : any) => {
+      this.products.set(data.content);
+        this.pageNumber.set(data.number + 1);
+        this.pageSize.set(data.size);
+        this.pageTotalElements.set(data.totalElements);
+    });
   }
 
 }

@@ -29,6 +29,49 @@
                     </div>
                 }
             </div>
+            <!-- pagination begins -->
+             <div class="footer-pagination">
+                <div class="row">
+                    <div class="col-md-6"></div>
+                    <div class="col-md-6">
+                        <div class="row align-items-center">
+                            <div class="col-md-9 d-flex justify-content-center">
+                                <!-- @if(!searchMode){ -->
+                                    <ngb-pagination [(page)] = "pageNumber"
+                                                    [pageSize] = "pageSize()"
+                                                    [collectionSize]="pageTotalElements()"
+                                                    [maxSize]="5"
+                                                    [boundaryLinks]="true"
+                                                    (pageChange) = "listProducts()">
+
+                                    </ngb-pagination>
+                                <!-- }@else {
+                                    <ngb-pagination [(page)] = "searchPageNumber"
+                                                        [pageSize] = "searchPageSize()"
+                                                        [collectionSize]="searchTotalElements()"
+                                                        [maxSize]="5"
+                                                        [boundaryLinks]="true"
+                                                        (pageChange) = "listProducts()">
+
+                                        </ngb-pagination>
+                                } -->
+                            </div>
+                            <div class="col-md-3 d-flex align-items-center justify-content-center mb-2">
+                                <span class="me-2">Page Size</span>
+                                <select #selectSize (change)="updatePageSize(selectSize.value)">
+                                    <option>2</option>
+                                    <option selected>5</option>
+                                    <option>10</option>
+                                    <option>20</option>
+                                    <option>50</option>
+                                </select>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+             </div>
         </div>
     </div>
 </div>

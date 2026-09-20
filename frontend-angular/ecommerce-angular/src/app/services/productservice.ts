@@ -16,8 +16,10 @@ export class ProductService {
 
     // }
 
-    getProductList(categoryId: number): Observable<ProductPage> {
-        const searchUrl = `${this.baseUrl}/category/${categoryId}`;
+    // Get the products based on the category id and it is paginated
+    getProductList(page: number, size: number, categoryId: number): Observable<ProductPage> {
+        //Build url to get the list of products for the category id using the parameters categoryId, page and size for pagination
+        const searchUrl = `${this.baseUrl}/category/${categoryId}?page=${page}&size=${size}`;
         return this.getProducts(searchUrl);
     }
 
@@ -30,8 +32,8 @@ export class ProductService {
         return this.httpClient.get<ProductCategory[]>(categoryUrl);
     }
 
-    searchProducts(searchValue : string) : Observable<ProductPage>{
-        const searchProductUrl = `${this.baseUrl}/search?name=${searchValue}`;
+    searchProducts(page: number, size: number, searchValue : string) : Observable<ProductPage>{
+        const searchProductUrl = `${this.baseUrl}/search?name=${searchValue}&page=${page}&size=${size}`;
         return this.getProducts(searchProductUrl);
     }
 

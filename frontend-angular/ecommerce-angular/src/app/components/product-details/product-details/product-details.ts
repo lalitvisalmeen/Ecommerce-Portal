@@ -1,8 +1,8 @@
 import { Component, signal } from '@angular/core';
 import { Product } from '../../../common/product';
 import { ProductService } from '../../../services/productservice';
-import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CurrencyPipe } from '@angular/common';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 
 @Component({
   imports: [CurrencyPipe, RouterLink],
