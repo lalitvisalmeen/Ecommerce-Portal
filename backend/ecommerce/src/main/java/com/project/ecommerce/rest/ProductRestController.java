@@ -23,9 +23,9 @@ public class ProductRestController {
     }
 
     @GetMapping("/products")
-    public List<Product> getProducts(){
+    public Page<Product> getProducts(Pageable pageable){
 
-        return productService.findAllProducts();
+        return productService.findAllProducts(pageable);
     }
 
     @GetMapping("/products/{productId}")

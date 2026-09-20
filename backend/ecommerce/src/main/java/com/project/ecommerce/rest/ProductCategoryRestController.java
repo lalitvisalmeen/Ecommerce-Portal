@@ -1,11 +1,9 @@
 package com.project.ecommerce.rest;
 
-import com.project.ecommerce.dao.ProductRepository;
 import com.project.ecommerce.entity.ProductCategory;
 import com.project.ecommerce.service.ProductCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
