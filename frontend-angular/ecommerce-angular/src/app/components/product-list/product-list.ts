@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 import { ProductService } from '../../services/productservice';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
+import { CartItem } from '../../common/cart-item/cart-items';
+import { CartService } from '../../services/cart-item/cart';
 
 @Component({
   imports: [CommonModule, RouterLink, NgbPagination],
@@ -15,9 +17,9 @@ export class ProductList implements OnInit {
   // products : Product[] = [];
   products = signal<Product[]>([]);
   categoryId: number = 1;
-  previousCategoryId : number = 1;
-  categoryName: string ="";
-  searchMode : boolean = false;
+  previousCategoryId: number = 1;
+  categoryName: string = "";
+  searchMode: boolean = false;
 
   // pagination fields
   pageNumber = signal<number>(1);
@@ -29,12 +31,11 @@ export class ProductList implements OnInit {
   // here we are using constructor injection to inject the product services
   // modern way of doing it is private productService = inject(ProductService)
   // this will map the route parameters to the route variable based on which route is acrive
-  constructor(private productService: ProductService, private route: ActivatedRoute) { }
+  constructor(private productService: ProductService, private cartService: CartService, private route: ActivatedRoute) { }
 
   // once this component is initialized then this method will execute like we had postconstructor in spring boot
   ngOnInit(): void {
-    this.route.paramMap.subscribe(() =>
-    {
+    this.route.paramMap.subscribe(() => {
       console.log("search is changed");
       this.listProducts();
     }
@@ -42,17 +43,17 @@ export class ProductList implements OnInit {
   }
 
   listProducts() {
-      this.searchMode = this.route.snapshot.paramMap.has("keyword");
-      if(this.searchMode){
-        this.searchProducts();
-      }
-      else{
-        this.getProductList();
-      }
-    
+    this.searchMode = this.route.snapshot.paramMap.has("keyword");
+    if (this.searchMode) {
+      this.searchProducts();
+    }
+    else {
+      this.getProductList();
+    }
+
   }
 
-  getProductList(){
+  getProductList() {
     // check whether the category id exists in the route.
     // the following code is checking the activatedroute in the given state(snapshot) and look for the params(parammap) with the id.
     const hasCategoryId: boolean = this.route.snapshot.paramMap.has("id");
@@ -63,14 +64,14 @@ export class ProductList implements OnInit {
       // use the ! in the end to tell it is not null. it is called typescript null assertion
       this.categoryId = +this.route.snapshot.paramMap.get("id")!;
       // To display the category name, when the user clicks on the category and view the products
-      const hasCategoryName : boolean = this.route.snapshot.paramMap.has("name");
-      if(hasCategoryName){
+      const hasCategoryName: boolean = this.route.snapshot.paramMap.has("name");
+      if (hasCategoryName) {
         this.categoryName = this.route.snapshot.paramMap.get("name")!;
       }
     }
 
     // if the category id in the url is different than the previousCategoryId then reset the page number to 1
-    if(this.previousCategoryId != this.categoryId){
+    if (this.previousCategoryId != this.categoryId) {
       this.pageNumber.set(1);
     }
 
@@ -82,14 +83,14 @@ export class ProductList implements OnInit {
     // now we have to get the products for the categoryId
     // here the subscribe will wait till it receives the data. the http call is the 
     // asynchronous function, and the observable said wait for my response
-    this.productService.getProductList(this.pageNumber() - 1,this.pageSize(), this.categoryId)
-                        .subscribe(this.setProductResults())
+    this.productService.getProductList(this.pageNumber() - 1, this.pageSize(), this.categoryId)
+      .subscribe(this.setProductResults())
 
   }
 
-  searchProducts(){
+  searchProducts() {
 
-    const searchValue:string  = this.route.snapshot.paramMap.get("keyword")!;
+    const searchValue: string = this.route.snapshot.paramMap.get("keyword")!;
 
     // if(this.previousKeyword != searchValue){
     //   this.pageNumber.set(1);
@@ -99,23 +100,30 @@ export class ProductList implements OnInit {
     // console.log(`searchvalue= ${searchValue}, pagenumber = ${this.pageNumber()}`);
 
     this.productService.searchProducts(this.pageNumber() - 1, this.pageSize(), searchValue)
-                        .subscribe(this.setProductResults())
+      .subscribe(this.setProductResults())
 
   }
 
-  updatePageSize(pageSize : string){
-      this.pageSize.set(+pageSize);
-      this.pageNumber.set(1);
-      this.listProducts();
+  updatePageSize(pageSize: string) {
+    this.pageSize.set(+pageSize);
+    this.pageNumber.set(1);
+    this.listProducts();
   }
 
-  setProductResults(){
-    return ((data : any) => {
+  setProductResults() {
+    return ((data: any) => {
       this.products.set(data.content);
-        this.pageNumber.set(data.number + 1);
-        this.pageSize.set(data.size);
-        this.pageTotalElements.set(data.totalElements);
+      this.pageNumber.set(data.number + 1);
+      this.pageSize.set(data.size);
+      this.pageTotalElements.set(data.totalElements);
     });
+  }
+
+  addToCart(product : Product){
+    console.log(`Add to cart: ${product.name}, ${product.unitPrice}`)
+    const cartItem = new CartItem(product);
+    // now call the service method to calculate totalquantity and total price
+    this.cartService.addToCart(cartItem);
   }
 
 }

@@ -1,8 +1,8 @@
 <div class="main-content">
     <div class="section-content section-content-p30">
         @if(categoryName){
-            <h4>Category: {{ categoryName }}</h4>
-            <hr>
+        <h4>Category: {{ categoryName }}</h4>
+        <hr>
         }
         <div class="container-fluid">
             <div class="row">
@@ -10,51 +10,40 @@
                 @for(product of products() ; track product.id){
                 <div class="col-md-3">
                     <div class="product-box">
-                            <a routerLink="/products/{{ product.id }}" class="text-decoration-none d-block">
-                                <img src="{{ product.imageUrl }}" alt="{{ product.name }}" class="image-responsive">
-                            </a>
-                            <a routerLink="/products/{{ product.id }}" class="text-decoration-none d-block text-dark">
-                                <h1>{{ product.name }}</h1>
-                            </a>
+                        <a routerLink="/products/{{ product.id }}" class="text-decoration-none d-block">
+                            <img src="{{ product.imageUrl }}" alt="{{ product.name }}" class="image-responsive">
+                        </a>
+                        <a routerLink="/products/{{ product.id }}" class="text-decoration-none d-block text-dark">
+                            <h1>{{ product.name }}</h1>
+                        </a>
                         <div class="price">{{ product.unitPrice | currency:'USD'}}</div>
-                        <a href="#" class="primary-btn text-decoration-none">Add to cart</a>
+                        <button (click)="addToCart(product)" class="btn btn-primary btn-sm add-to-cart-btn">Add to cart</button>
                     </div>
                 </div>
                 }
                 <!-- we use safe navigation operator ? to prevent any errors related to null or undefined-->
-                 <!-- so if products is null or undefined or length is 0 then no products found will display-->
+                <!-- so if products is null or undefined or length is 0 then no products found will display-->
                 @if(products()?.length == 0){
-                    <div class="alert alert-warning col-md-12" role="alert">
-                        No Products found
-                    </div>
+                <div class="alert alert-warning col-md-12" role="alert">
+                    No Products found
+                </div>
                 }
             </div>
             <!-- pagination begins -->
-             <div class="footer-pagination">
+            <div class="footer-pagination">
                 <div class="row">
                     <div class="col-md-6"></div>
                     <div class="col-md-6">
                         <div class="row align-items-center">
                             <div class="col-md-9 d-flex justify-content-center">
-                                <!-- @if(!searchMode){ -->
-                                    <ngb-pagination [(page)] = "pageNumber"
-                                                    [pageSize] = "pageSize()"
-                                                    [collectionSize]="pageTotalElements()"
-                                                    [maxSize]="5"
-                                                    [boundaryLinks]="true"
-                                                    (pageChange) = "listProducts()">
+                                <ngb-pagination [(page)]="pageNumber" 
+                                                [pageSize]="pageSize()"
+                                                [collectionSize]="pageTotalElements()" 
+                                                [maxSize]="5" 
+                                                [boundaryLinks]="true"
+                                                (pageChange)="listProducts()">
 
-                                    </ngb-pagination>
-                                <!-- }@else {
-                                    <ngb-pagination [(page)] = "searchPageNumber"
-                                                        [pageSize] = "searchPageSize()"
-                                                        [collectionSize]="searchTotalElements()"
-                                                        [maxSize]="5"
-                                                        [boundaryLinks]="true"
-                                                        (pageChange) = "listProducts()">
-
-                                        </ngb-pagination>
-                                } -->
+                                </ngb-pagination>
                             </div>
                             <div class="col-md-3 d-flex align-items-center justify-content-center mb-2">
                                 <span class="me-2">Page Size</span>
@@ -70,8 +59,8 @@
                         </div>
                     </div>
                 </div>
-
-             </div>
+            </div>
+            <!-- pagination ends -->
         </div>
     </div>
 </div>

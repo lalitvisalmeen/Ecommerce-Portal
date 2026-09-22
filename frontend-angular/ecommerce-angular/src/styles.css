@@ -1047,4 +1047,18 @@ footer ul li{
     width : 30%
 }
 
+button.add-to-cart-btn{
+    --bs-btn-bg: #092268;
+    --bs-btn-border-color: #092268;
+    --bs-btn-hover-bg: #092268;
+    --bs-btn-hover-border-color: #092268;
+}
+
+table.table.table-bordered th.cart-details-table{
+    background: #092268;
+    border-color: #092268;
+    color: #fff;
+    border: 1px solid #dee2e6;
+}
+
 

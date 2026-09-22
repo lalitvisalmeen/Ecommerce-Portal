@@ -1,0 +1,66 @@
+<div class="main-content">
+    <div class="section-content section-content-p30">
+        <div class="container-fluid">
+            @if(cartItems().length > 0){
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th width="20%" class="cart-details-table">Product Image</th>
+                            <th width="50%" class="cart-details-table">Product Detail</th>
+                            <th width="30%" class="cart-details-table"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for(cartItem of cartItems() ; track cartItem.id){
+                            <tr>
+                                <td>
+                                    <img src="{{ cartItem.imageUrl }}" class="img-responsive" width="150px" />
+                                </td>
+                                <td>
+                                    <p>{{ cartItem.name }}</p>
+                                    <p>{{ cartItem.unitPrice | currency:"USD" }}</p>
+                                </td>
+                                <td>
+                                    <div class="items">
+                                        <label>Quantity: </label>
+                                        <div class="row g-0">
+                                            <div class="col">
+                                                <button (click)="addToCart(cartItem)" class="btn btn-primary btn-sm">
+                                                    <i class="fas fa-plus"></i>
+                                                </button>
+                                            </div>
+                                            <div class="col ms-4 me-2">
+                                                {{ cartItem.quantity }}
+                                            </div>
+                                            <div class="col">
+                                                <button (click)="decrementQuantity(cartItem)" class="btn btn-primary btn-sm">
+                                                    <i class="fas fa-minus"></i>
+                                                </button>
+                                            </div>
+                                            <div class="col-8"></div>
+                                        </div>
+                                    </div>
+                                    <button (click)="removeItem(cartItem)"  class="btn btn-danger btn-sm mt-4">Remove</button>
+                                    <p class="mt-2">Subtotal: {{ cartItem.quantity *  cartItem.unitPrice | currency:"USD"}}</p>
+                                </td>
+                            </tr>
+                        }
+                        <tr>
+                            <td colspan="2"></td>
+                            <td class="fw-bold">
+                                <p>Total Quantity: {{ totalQuantity() }}</p>
+                                <p>Shipping: FREE</p>
+                                <p>Total Amount: {{ totalPrice() | currency:"USD" }}</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            }@else{
+                <div class="alert alert-warning col-md-12" role="alert">
+                    Your cart is empty.
+                </div>
+            }
+        </div>
+    </div>
+</div>
+

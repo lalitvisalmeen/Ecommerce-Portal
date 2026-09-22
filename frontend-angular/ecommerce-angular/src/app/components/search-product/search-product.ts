@@ -8,9 +8,9 @@ import { Router } from '@angular/router';
   templateUrl: './search-product.html',
 })
 export class SearchProduct {
-  constructor(private router: Router){};
+  constructor(private router: Router) { };
 
-  doSearch(searchInput : string){
+  doSearch(searchInput: string) {
     console.log(`Search value = ${searchInput}`);
     this.router.navigateByUrl(`/search/${searchInput}`);
   }
