@@ -2,9 +2,10 @@ import { Component, inject, signal } from '@angular/core';
 import { CartService } from '../../services/cart-item/cart';
 import { CartItem } from '../../common/cart-item/cart-items';
 import { CurrencyPipe } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
-  imports: [CurrencyPipe],
+  imports: [CurrencyPipe, RouterLink],
   selector: 'app-cart-details',
   styleUrl: './cart-details.css',
   templateUrl: './cart-details.html',
