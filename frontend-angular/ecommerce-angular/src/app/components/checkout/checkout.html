@@ -12,6 +12,14 @@
                         <div class="col-md-9">
                             <div class="input-space">
                                 <input formControlName="firstName" type="text">
+                                @if(firstName?.invalid && (firstName.dirty || firstName.touched)){
+                                    @if(firstName.hasError('required') || firstName.hasError('whitespace')){
+                                        <p class="text-danger small ms-2">First Name is required</p>
+                                    }
+                                    @else if(firstName.hasError('minLengthTrim')){
+                                        <p class="text-danger small ms-2">First Name must be atleast 2 characters long</p>
+                                    }
+                                }
                             </div>
                         </div>
                     </div>
@@ -22,6 +30,14 @@
                         <div class="col-md-9">
                             <div class="input-space">
                                 <input formControlName="lastName" type="text">
+                                @if(lastName?.invalid && (lastName.dirty || lastName.touched)){
+                                    @if(lastName.hasError('required') || lastName.hasError('whitespace')){
+                                        <p class="text-danger small ms-2">Last Name is required</p>
+                                    }
+                                    @else if(lastName.hasError('minLengthTrim')){
+                                        <p class="text-danger small ms-2">Last Name must be atleast 2 characters long</p>
+                                    }
+                                }
                             </div>
                         </div>
                     </div>
@@ -32,6 +48,14 @@
                         <div class="col-md-9">
                             <div class="input-space">
                                 <input formControlName="email" type="text">
+                                @if(email?.invalid && (email.dirty || email.touched)){
+                                    @if(email.hasError('pattern')){
+                                        <p class="text-danger small ms-2">Email must be in a valid email address format </p>
+                                    }
+                                    @if(email.hasError('required')){
+                                        <p class="text-danger small ms-2">Email is required</p>
+                                    }
+                                }
                             </div>
                         </div>
                     </div>
@@ -44,8 +68,11 @@
                         </div>
                         <div class="col-md-9">
                             <div class="input-space">
-                                <select formControlName="country">
+                                <select formControlName="country" (change)="getStates('shipping')">
                                     <option value="">--select--</option>
+                                    @for(country of countries(); track country.id){
+                                        <option [ngValue]="country">{{ country.name }}</option>
+                                    }
                                 </select>
                             </div>
                         </div>
@@ -77,6 +104,9 @@
                         <div class="col-md-9 input-space">
                             <select formControlName="state">
                                 <option value="">--select--</option>
+                                @for(state of shippingStates(); track state.id){
+                                    <option [ngValue]="state">{{ state.name }}</option>
+                                }
                             </select>
                         </div>
                     </div>
@@ -106,8 +136,11 @@
                             <label>Country</label>
                         </div>
                         <div class="col-md-9 input-space">
-                            <select formControlName="country">
+                            <select formControlName="country" (change)="getStates('billing')">
                                 <option value="">--select--</option>
+                                @for(country of countries(); track country.id){
+                                    <option [ngValue]="country">{{ country.name }}</option>
+                                }
                             </select>
                         </div>
                     </div>
@@ -138,6 +171,9 @@
                         <div class="col-md-9 input-space">
                             <select formControlName="state">
                                 <option value="">--select--</option>
+                                @for(state of billingStates(); track state.id){
+                                    <option [ngValue]="state">{{ state.name }}</option>
+                                }
                             </select>
                         </div>
                     </div>

@@ -1,8 +1,15 @@
-import { Service } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { inject, Service } from '@angular/core';
 import { Observable, of } from 'rxjs';
+import { Country } from '../../common/country/country';
+import { State } from '../../common/state/state';
 
 @Service()
 export class HelperService {
+
+    private httpClient = inject(HttpClient);
+    private countryUrl = "http://localhost:8080/api/countries";
+    private stateUrl = "http://localhost:8080/api/states";
 
     // credit card years and months
   creditCardMonths = [
@@ -38,4 +45,19 @@ export class HelperService {
         // wrap the object as an observable
         return of(years);
     }
+
+    // get the list of countries
+    getCountryList() : Observable<Country[]>{
+       return this.httpClient.get<Country[]>(this.countryUrl);
+
+    }
+
+    // get the state list for a specific country code
+    getStatesList(countryCode: string) : Observable<State[]>{
+        const searchStateUrl = `${this.stateUrl}?countryCode=${countryCode}`;
+        return this.httpClient.get<State[]>(searchStateUrl);
+        
+    }
+
+
 }
