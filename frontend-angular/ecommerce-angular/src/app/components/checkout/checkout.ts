@@ -46,26 +46,26 @@ export class Checkout {
         email: ['', [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
       }),
       shippingAddress: this.formBuilder.group({
-        country: [''],
-        street: [''],
-        city: [''],
-        state: [''],
-        zipcode: [''],
+        country: ['', [Validators.required]],
+        street: ['', [Validators.required, CustomValidator.minLengthAfterTrim(2), CustomValidator.whiteSpace]],
+        city: ['', [Validators.required, CustomValidator.minLengthAfterTrim(2), CustomValidator.whiteSpace]],
+        state: ['', [Validators.required]],
+        zipcode: ['', [Validators.required, CustomValidator.minLengthAfterTrim(5), CustomValidator.whiteSpace]],
       }),
       billingAddress: this.formBuilder.group({
-        country: [''],
-        street: [''],
-        city: [''],
-        state: [''],
-        zipcode: [''],
+        country: ['', [Validators.required]],
+        street: ['', [Validators.required, CustomValidator.minLengthAfterTrim(2), CustomValidator.whiteSpace]],
+        city: ['', [Validators.required, CustomValidator.minLengthAfterTrim(2), CustomValidator.whiteSpace]],
+        state: ['', [Validators.required]],
+        zipcode: ['', [Validators.required, CustomValidator.minLengthAfterTrim(5), CustomValidator.whiteSpace]],
       }),
       paymentDetails: this.formBuilder.group({
-        cardType: [''],
-        nameOnCard: [''],
-        cardNumber: [''],
-        securityCode: [''],
-        expiryMonth: [{ value: '', disabled: true }],
-        expiryYear: [''],
+        cardType: ['', [Validators.required]],
+        nameOnCard: ['', [Validators.required, CustomValidator.minLengthAfterTrim(2), CustomValidator.whiteSpace]],
+        cardNumber: ['', [Validators.required, Validators.pattern(/^\d{4}(\s?\d{4}){3}$/)]],
+        securityCode: ['', [Validators.required, Validators.pattern(/^\d{3,4}$/)]],
+        expiryMonth: [{ value: '', disabled: true }, [Validators.required]],
+        expiryYear: ['', [Validators.required]],
       })
     });
 
@@ -76,13 +76,7 @@ export class Checkout {
     );
 
     // subscribe to the totalquantity and totalPrice
-    this.cartService.totalPrice.subscribe(
-      data => this.totalPrice.set(data)
-    );
-
-    this.cartService.totalQuantity.subscribe(
-      data => this.totalQuantity.set(data)
-    );
+    this.reviewCartDetails();
 
     // get the country list
     this.helperService.getCountryList().subscribe(
@@ -90,15 +84,37 @@ export class Checkout {
     );
   }
 
-  // use the getters to use in the form to display validation error messages
-  get firstName(){ return this.checkoutFormGroup.get('customer.firstName'); }
-  get lastName(){ return this.checkoutFormGroup.get('customer.lastName'); }
-  get email(){ return this.checkoutFormGroup.get('customer.email'); }
+  // use the getters to use in the form to access form controls
+  get firstName() { return this.checkoutFormGroup.get('customer.firstName'); }
+  get lastName() { return this.checkoutFormGroup.get('customer.lastName'); }
+  get email() { return this.checkoutFormGroup.get('customer.email'); }
+
+  // use the getters for the shipping details to access form controls
+  get shippingCountry() { return this.checkoutFormGroup.get('shippingAddress.country'); }
+  get shippingStreet() { return this.checkoutFormGroup.get('shippingAddress.street'); }
+  get shippingCity() { return this.checkoutFormGroup.get('shippingAddress.city'); }
+  get shippingState() { return this.checkoutFormGroup.get('shippingAddress.state'); }
+  get shippingZipcode() { return this.checkoutFormGroup.get('shippingAddress.zipcode'); }
+
+  // use the getters to access form controls of billing address
+  get billingCountry() { return this.checkoutFormGroup.get('billingAddress.country'); }
+  get billingStreet() { return this.checkoutFormGroup.get('billingAddress.street'); }
+  get billingCity() { return this.checkoutFormGroup.get('billingAddress.city'); }
+  get billingState() { return this.checkoutFormGroup.get('billingAddress.state'); }
+  get billingZipcode() { return this.checkoutFormGroup.get('billingAddress.zipcode'); }
+
+  // use the getters to access form controls of payment details
+  get cardType() { return this.checkoutFormGroup.get('paymentDetails.cardType'); }
+  get nameOnCard() { return this.checkoutFormGroup.get('paymentDetails.nameOnCard'); }
+  get cardNumber() { return this.checkoutFormGroup.get('paymentDetails.cardNumber'); }
+  get securityCode() { return this.checkoutFormGroup.get('paymentDetails.securityCode'); }
+  get expiryMonth() { return this.checkoutFormGroup.get('paymentDetails.expiryMonth'); }
+  get expiryYear() { return this.checkoutFormGroup.get('paymentDetails.expiryYear'); }
 
   onSubmit() {
     console.log("Handling the submit button click");
     // check the validation errors
-    if(this.checkoutFormGroup.invalid){
+    if (this.checkoutFormGroup.invalid) {
       this.checkoutFormGroup.markAllAsTouched();
     }
     // if the value exists return the value otherwsie return undefined
@@ -111,12 +127,15 @@ export class Checkout {
     if (checkbox.checked) {
       this.checkoutFormGroup.controls['billingAddress']
         .setValue(this.checkoutFormGroup.controls['shippingAddress'].value);
-      this.billingStates = this.shippingStates;
+      this.billingStates.set(this.shippingStates());
+      this.checkoutFormGroup.get('billingAddress')?.disable();
     } else {
       this.checkoutFormGroup.controls['billingAddress'].reset();
       this.checkoutFormGroup.get(`billingAddress.state`)?.setValue('');
       this.checkoutFormGroup.get(`billingAddress.country`)?.setValue('');
       this.billingStates.set([]);
+      this.checkoutFormGroup.controls['billingAddress']?.enable();
+
     }
   }
 
@@ -153,7 +172,7 @@ export class Checkout {
       countryCode = this.checkoutFormGroup.get('billingAddress')?.value.country.code;
     }
 
-    console.log('country code '+countryCode);
+    console.log('country code ' + countryCode);
 
     if (countryCode) {
       this.helperService.getStatesList(countryCode).subscribe(
@@ -174,5 +193,15 @@ export class Checkout {
         this.billingStates.set([]);
       }
     }
+  }
+
+  private reviewCartDetails() {
+    this.cartService.totalPrice.subscribe(
+      data => this.totalPrice.set(data)
+    );
+
+    this.cartService.totalQuantity.subscribe(
+      data => this.totalQuantity.set(data)
+    );
   }
 }

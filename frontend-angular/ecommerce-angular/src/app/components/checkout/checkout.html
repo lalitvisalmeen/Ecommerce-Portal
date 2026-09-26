@@ -68,12 +68,17 @@
                         </div>
                         <div class="col-md-9">
                             <div class="input-space">
-                                <select formControlName="country" (change)="getStates('shipping')">
+                                <select formControlName="country" class="form-select" (change)="getStates('shipping')">
                                     <option value="">--select--</option>
                                     @for(country of countries(); track country.id){
                                         <option [ngValue]="country">{{ country.name }}</option>
                                     }
                                 </select>
+                                @if(shippingCountry?.invalid && (shippingCountry.dirty || shippingCountry.touched)){
+                                    @if(shippingCountry.hasError('required')){
+                                        <p class="text-danger small ms-2">Country is required</p>
+                                    }
+                                }
                             </div>
                         </div>
                     </div>
@@ -84,6 +89,14 @@
                         <div class="col-md-9">
                             <div class="input-space">
                                 <input formControlName="street" type="text">
+                                @if(shippingStreet?.invalid && (shippingStreet.dirty || shippingStreet.touched)){
+                                    @if(shippingStreet.hasError('required') || shippingStreet.hasError('whitespace')){
+                                        <p class="text-danger small ms-2">Street is required</p>
+                                    }
+                                    @else if(shippingStreet.hasError('minLengthTrim')){
+                                        <p class="text-danger small ms-2">Street must be atleast 2 characters long</p>
+                                    }
+                                }
                             </div>
                         </div>
                     </div>
@@ -94,6 +107,14 @@
                         <div class="col-md-9">
                             <div class="input-space">
                                 <input formControlName="city" type="text">
+                                @if(shippingCity?.invalid && (shippingCity.dirty || shippingCity.touched)){
+                                    @if(shippingCity.hasError('required') || shippingCity.hasError('whitespace')){
+                                        <p class="text-danger small ms-2">City is required</p>
+                                    }
+                                    @else if(shippingCity.hasError('minLengthTrim')){
+                                        <p class="text-danger small ms-2">City must be atleast 2 characters long</p>
+                                    }
+                                }
                             </div>
                         </div>
                     </div>
@@ -102,12 +123,17 @@
                             <label>State</label>
                         </div>
                         <div class="col-md-9 input-space">
-                            <select formControlName="state">
+                            <select formControlName="state" class="form-select">
                                 <option value="">--select--</option>
                                 @for(state of shippingStates(); track state.id){
                                     <option [ngValue]="state">{{ state.name }}</option>
                                 }
                             </select>
+                            @if(shippingState?.invalid && (shippingState.dirty || shippingState.touched)){
+                                    @if(shippingState.hasError('required')){
+                                        <p class="text-danger small ms-2">State is required</p>
+                                    }
+                                }
                         </div>
                     </div>
                     <div class="row">
@@ -117,6 +143,14 @@
                         <div class="col-md-9">
                             <div class="input-space">
                                 <input type="text" formControlName="zipcode">
+                                @if(shippingZipcode?.invalid && (shippingZipcode.dirty || shippingZipcode.touched)){
+                                    @if(shippingZipcode.hasError('required') || shippingZipcode.hasError('whitespace')){
+                                        <p class="text-danger small ms-2">Zipcode is required</p>
+                                    }
+                                    @else if(shippingZipcode.hasError('minLengthTrim')){
+                                        <p class="text-danger small ms-2">Zipcode must be atleast 5 characters/digits long</p>
+                                    }
+                                }
                             </div>
                         </div>
                     </div>
@@ -136,12 +170,17 @@
                             <label>Country</label>
                         </div>
                         <div class="col-md-9 input-space">
-                            <select formControlName="country" (change)="getStates('billing')">
+                            <select formControlName="country" class="form-select" (change)="getStates('billing')">
                                 <option value="">--select--</option>
                                 @for(country of countries(); track country.id){
                                     <option [ngValue]="country">{{ country.name }}</option>
                                 }
                             </select>
+                            @if(billingCountry?.invalid && (billingCountry.dirty || billingCountry.touched)){
+                                @if(billingCountry.hasError('required')){
+                                    <p class="text-danger small ms-2">Country is required</p>
+                                }
+                            }
                         </div>
                     </div>
                     <div class="row">
@@ -151,6 +190,14 @@
                         <div class="col-md-9">
                             <div class="input-space">
                                 <input formControlName="street" type="text">
+                                @if(billingStreet?.invalid && (billingStreet.dirty || billingStreet.touched)){
+                                    @if(billingStreet.hasError('required') || billingStreet.hasError('whitespace')){
+                                        <p class="text-danger small ms-2">Street is required</p>
+                                    }
+                                    @else if(billingStreet.hasError('minLengthTrim')){
+                                        <p class="text-danger small ms-2">Street must be atleast 2 characters long</p>
+                                    }
+                                }
                             </div>
                         </div>
                     </div>
@@ -161,6 +208,14 @@
                         <div class="col-md-9">
                             <div class="input-space">
                                 <input formControlName="city" type="text">
+                                @if(billingCity?.invalid && (billingCity.dirty || billingCity.touched)){
+                                    @if(billingCity.hasError('required') || billingCity.hasError('whitespace')){
+                                        <p class="text-danger small ms-2">City is required</p>
+                                    }
+                                    @else if(billingCity.hasError('minLengthTrim')){
+                                        <p class="text-danger small ms-2">City must be of atleast 2 characters long</p>
+                                    }
+                                }
                             </div>
                         </div>
                     </div>
@@ -169,12 +224,17 @@
                             <label>State</label>
                         </div>
                         <div class="col-md-9 input-space">
-                            <select formControlName="state">
+                            <select formControlName="state" class="form-select">
                                 <option value="">--select--</option>
                                 @for(state of billingStates(); track state.id){
                                     <option [ngValue]="state">{{ state.name }}</option>
                                 }
                             </select>
+                            @if(billingState?.invalid && (billingState.dirty || billingState.touched)){
+                                @if(billingState.hasError('required')){
+                                    <p class="text-danger small ms-2">State is required</p>
+                                }
+                            }
                         </div>
                     </div>
                     <div class="row">
@@ -184,6 +244,14 @@
                         <div class="col-md-9">
                             <div class="input-space">
                                 <input type="text" formControlName="zipcode">
+                                @if(billingZipcode?.invalid && (billingZipcode.dirty || billingZipcode.touched)){
+                                    @if(billingZipcode.hasError('required') || billingZipcode.hasError('whitespace')){
+                                        <p class="text-danger small ms-2">Zipcode is required</p>
+                                    }
+                                    @else if(billingZipcode.hasError('minLengthTrim')){
+                                        <p class="text-danger small ms-2">Zipcode must have atleast 5 characters/digits long</p>
+                                    }
+                                }
                             </div>
                         </div>
                     </div>
@@ -196,11 +264,16 @@
                             <label>Card Type</label>
                         </div>
                         <div class="col-md-9 input-space">
-                            <select formControlName="cardType">
-                                <option>--select--</option>
-                                <option>Visa</option>
-                                <option>Mastercard</option>
+                            <select formControlName="cardType" class="form-select">
+                                <option value="">--select--</option>
+                                <option value="visa">Visa</option>
+                                <option value="mastercard">Mastercard</option>
                             </select>
+                            @if(cardType?.invalid && (cardType.dirty || cardType.touched)){
+                                @if(cardType.hasError('required')){
+                                    <p class="text-danger small ms-2">Card Type is required</p>
+                                }
+                            }
                         </div>
                     </div>
                     <div class="row">
@@ -209,6 +282,14 @@
                         </div>
                         <div class="col-md-9 input-space">
                             <input formControlName="nameOnCard" type="text">
+                            @if(nameOnCard?.invalid && (nameOnCard.dirty || nameOnCard.touched)){
+                                @if(nameOnCard.hasError('required') || nameOnCard.hasError('whitespace')){
+                                    <p class="text-danger small ms-2">Name on card is required</p>
+                                }
+                                @else if(nameOnCard.hasError('minLengthTrim')){
+                                    <p class="text-danger small ms-2">Name on card must be of atleast 2 characters long</p>
+                                }
+                            }
                         </div>
                     </div>
                     <div class="row">
@@ -216,7 +297,15 @@
                             <label>Card Number</label>
                         </div>
                         <div class="col-md-9 input-space">
-                            <input formControlName="cardNumber" type="text">
+                            <input formControlName="cardNumber" type="text" placeholder="1234 1234 1234 1234">
+                            @if(cardNumber?.invalid && (cardNumber.dirty || cardNumber.touched)){
+                                @if(cardNumber.hasError('required')){
+                                    <p class="text-danger small ms-2">Card Number is required</p>
+                                }
+                                @else if(cardNumber.hasError('pattern')){
+                                    <p class="text-danger small ms-2">Card number must be 16 digits</p>
+                                }
+                            }
                         </div>
                     </div>
                     <div class="row">
@@ -225,6 +314,14 @@
                         </div>
                         <div class="col-md-9 input-space">
                             <input formControlName="securityCode" type="text">
+                            @if(securityCode?.invalid && (securityCode.dirty || securityCode.touched)){
+                                @if(securityCode.hasError('required')){
+                                    <p class="text-danger small ms-2">Security code is required</p>
+                                }
+                                @else if(securityCode.hasError('pattern')){
+                                    <p class="text-danger small ms-2">Security code must be 3 or 4 digits</p>
+                                }
+                            }
                         </div>
                     </div>
                    
@@ -233,12 +330,17 @@
                             <label>Expiration Year </label>
                         </div>
                         <div class="col-md-9 input-space">
-                            <select formControlName="expiryYear" (change)="handleMonthsAndYears()">
+                            <select formControlName="expiryYear" (change)="handleMonthsAndYears()" class="form-select">
                                 <option>--select--</option>
                                 @for(year of creditCardYears(); track $index){
                                     <option>{{ year }}</option>
                                 }
                             </select>
+                            @if(expiryYear?.invalid && (expiryYear.dirty || expiryYear.touched)){
+                                @if(expiryYear.hasError('required')){
+                                    <p class="text-danger small ms-2">Expiration year is required</p>
+                                }
+                            }
                         </div>
                     </div>
                      <div class="row">
@@ -246,12 +348,17 @@
                             <label>Expiration Month</label>
                         </div>
                         <div class="col-md-9 input-space">
-                            <select formControlName="expiryMonth">
+                            <select formControlName="expiryMonth" class="form-select">
                                 <option value=""> --select--</option>
                                @for(month of creditCardMonths(); track month.value){
                                 <option [value]="month.value">{{ month.name }}</option>
                                }
                             </select>
+                            @if(expiryMonth?.invalid && (expiryMonth.dirty || expiryMonth.touched)){
+                                @if(expiryMonth.hasError('required')){
+                                    <p class="text-danger small ms-2">Expiration month is required</p>
+                                }
+                            }
                         </div>
                     </div>
                 </div>

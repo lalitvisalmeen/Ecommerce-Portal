@@ -1,13 +1,14 @@
 import { Service } from '@angular/core';
 import { CartItem } from '../../common/cart-item/cart-items';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 @Service()
 export class CartService {
     cartItems : CartItem[] = [];
 
-    totalQuantity: Subject<number> = new Subject<number>();
-    totalPrice : Subject<number> = new Subject<number>();
+    // we use behaviorsubject here, because even if other component subscribe to this event after the event is published, they will be able to get the latest update on the event.
+    totalQuantity: Subject<number> = new BehaviorSubject<number>(0);
+    totalPrice : Subject<number> = new BehaviorSubject<number>(0);
 
     addToCart(theCartItem : CartItem){
         // check whether the cart item already exists
