@@ -26,7 +26,7 @@ export class ProductList implements OnInit {
   pageSize = signal<number>(5);
   pageTotalElements = signal<number>(0);
 
-  //previousKeyword = "";
+  previousKeyword = "";
 
   // here we are using constructor injection to inject the product services
   // modern way of doing it is private productService = inject(ProductService)
@@ -36,7 +36,6 @@ export class ProductList implements OnInit {
   // once this component is initialized then this method will execute like we had postconstructor in spring boot
   ngOnInit(): void {
     this.route.paramMap.subscribe(() => {
-      console.log("search is changed");
       this.listProducts();
     }
     );
@@ -92,11 +91,11 @@ export class ProductList implements OnInit {
 
     const searchValue: string = this.route.snapshot.paramMap.get("keyword")!;
 
-    // if(this.previousKeyword != searchValue){
-    //   this.pageNumber.set(1);
-    // }
+    if(this.previousKeyword != searchValue){
+      this.pageNumber.set(1);
+    }
 
-    // this.previousKeyword = searchValue;
+    this.previousKeyword = searchValue;
     // console.log(`searchvalue= ${searchValue}, pagenumber = ${this.pageNumber()}`);
 
     this.productService.searchProducts(this.pageNumber() - 1, this.pageSize(), searchValue)
