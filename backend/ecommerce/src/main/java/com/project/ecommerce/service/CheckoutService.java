@@ -1,4 +1,9 @@
 package com.project.ecommerce.service;
 
-public class CheckoutService {
+import com.project.ecommerce.dto.Purchase;
+import com.project.ecommerce.dto.PurchaseResponse;
+
+public interface CheckoutService {
+
+    PurchaseResponse placeOrder(Purchase purchase);
 }
