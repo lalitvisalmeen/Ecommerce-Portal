@@ -6,6 +6,13 @@ import { HelperService } from '../../services/helper/helper-service';
 import { Country } from '../../common/country/country';
 import { State } from '../../common/state/state';
 import { CustomValidator } from '../../validators/custom-validator';
+import { Order } from '../../common/order/order';
+import { OrderItem } from '../../common/order-item/order-item';
+import { Purchase } from '../../common/purchase/purchase';
+import { Address } from '../../common/address/address';
+import { Checkoutservice } from '../../services/checkout/checkoutservice';
+import { Router } from '@angular/router';
+import { NotficationService } from '../../services/notification/notfication-service';
 
 @Component({
   imports: [ReactiveFormsModule, CurrencyPipe],
@@ -27,6 +34,9 @@ export class Checkout {
   formBuilder = inject(FormBuilder);
   cartService = inject(CartService);
   helperService = inject(HelperService);
+  checkoutService = inject(Checkoutservice);
+  notificationService = inject(NotficationService);
+  router = inject(Router);
 
   // get country and state list
   countries = signal<Country[]>([]);
@@ -116,10 +126,77 @@ export class Checkout {
     // check the validation errors
     if (this.checkoutFormGroup.invalid) {
       this.checkoutFormGroup.markAllAsTouched();
+      return;
     }
-    // if the value exists return the value otherwsie return undefined
-    console.log(this.checkoutFormGroup.get("customer")?.value)
-    console.log(this.checkoutFormGroup.get("customer")?.value.email)
+
+    // now we need to setup the purchase to send to the backend.
+    // set up order
+    let order = new Order(this.totalPrice(), this.totalQuantity());
+    // get the cart items and populate the order items out of it
+    const cartItems = this.cartService.cartItems;
+    let orderItems: OrderItem[] = cartItems.map(cartItem => new OrderItem(cartItem));
+    // now populate the data required for purchase
+    let purchase = new Purchase();
+    // pupulate the purchase - customer
+    purchase.customer = this.checkoutFormGroup.get('customer')?.value;
+    // pupulate the addresses
+    const shippingAddress = this.checkoutFormGroup.get('shippingAddress')?.value;
+
+    if (shippingAddress) {
+      purchase.shippingAddress = new Address(shippingAddress.street,
+        shippingAddress.city,
+        shippingAddress.state?.name,
+        shippingAddress.country?.name,
+        shippingAddress.zipcode);
+
+    }
+    const billingAddress = this.checkoutFormGroup.get('billingAddress')?.value;
+    if (billingAddress) {
+      purchase.billingAddress = new Address(billingAddress.street,
+        billingAddress.city,
+        billingAddress.state?.name,
+        billingAddress.country?.name,
+        billingAddress.zipcode);
+    }
+
+    console.log("Address is ", purchase.billingAddress);
+
+    // populate purchase - order and order items
+    purchase.order = order;
+    purchase.orderItems = orderItems;
+
+    // now call the checkoutservice to make an api call and pass the purchase to that
+    this.checkoutService.placeOrder(purchase).subscribe({
+
+      next: response => {
+        const message = `Your order has been received. Tracking number for your reference is ${response.orderTrackingNumber}`;
+        this.notificationService.show(message, 'success');
+        this.resetCart();
+      },
+      error: err => {
+        const message = "There was an error in placing the order. Please try again."
+        this.notificationService.show(message, 'danger');
+
+        setTimeout(() => {
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+        });
+      }
+    });
+
+  }
+
+  resetCart() {
+    // reset the cart data
+    this.cartService.cartItems = [];
+    this.cartService.totalPrice.next(0);
+    this.cartService.totalQuantity.next(0);
+    // reset the form
+    this.checkoutFormGroup.reset();
+    // redirect the user back to the products page
+    this.router.navigateByUrl("/products");
   }
 
   billingAddressSameAsShipping(event: Event) {

@@ -4,6 +4,15 @@
         <h4>Category: {{ categoryName }}</h4>
         <hr>
         }
+        @if (notificationService.message()) {
+        <div class="alert" [class.alert-success]="notificationService.type() === 'success'"
+            [class.alert-danger]="notificationService.type() === 'danger'" role="alert">
+            {{ notificationService.message() }}
+
+            <button type="button" class="btn-close float-end" aria-label="Close" (click)="notificationService.clear()">
+            </button>
+        </div>
+        }
         <div class="container-fluid">
             <div class="row">
                 <!-- Loop over the collection of products -->
@@ -17,7 +26,8 @@
                             <h1>{{ product.name }}</h1>
                         </a>
                         <div class="price">{{ product.unitPrice | currency:'USD'}}</div>
-                        <button (click)="addToCart(product)" class="btn btn-primary btn-sm add-to-cart-btn">Add to cart</button>
+                        <button (click)="addToCart(product)" class="btn btn-primary btn-sm add-to-cart-btn">Add to
+                            cart</button>
                     </div>
                 </div>
                 }
@@ -36,12 +46,9 @@
                     <div class="col-md-6">
                         <div class="row align-items-center">
                             <div class="col-md-9 d-flex justify-content-center">
-                                <ngb-pagination [(page)]="pageNumber" 
-                                                [pageSize]="pageSize()"
-                                                [collectionSize]="pageTotalElements()" 
-                                                [maxSize]="5" 
-                                                [boundaryLinks]="true"
-                                                (pageChange)="listProducts()">
+                                <ngb-pagination [(page)]="pageNumber" [pageSize]="pageSize()"
+                                    [collectionSize]="pageTotalElements()" [maxSize]="5" [boundaryLinks]="true"
+                                    (pageChange)="listProducts()">
 
                                 </ngb-pagination>
                             </div>

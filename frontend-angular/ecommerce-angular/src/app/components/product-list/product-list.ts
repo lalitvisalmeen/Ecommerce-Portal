@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { Product } from '../../common/product';
 import { CommonModule } from '@angular/common';
 import { ProductService } from '../../services/productservice';
@@ -6,6 +6,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
 import { CartItem } from '../../common/cart-item/cart-items';
 import { CartService } from '../../services/cart-item/cart';
+import { NotficationService } from '../../services/notification/notfication-service';
 
 @Component({
   imports: [CommonModule, RouterLink, NgbPagination],
@@ -14,7 +15,6 @@ import { CartService } from '../../services/cart-item/cart';
   templateUrl: './product-list-grid.html',
 })
 export class ProductList implements OnInit {
-  // products : Product[] = [];
   products = signal<Product[]>([]);
   categoryId: number = 1;
   previousCategoryId: number = 1;
@@ -25,6 +25,7 @@ export class ProductList implements OnInit {
   pageNumber = signal<number>(1);
   pageSize = signal<number>(5);
   pageTotalElements = signal<number>(0);
+  notificationService = inject(NotficationService);
 
   previousKeyword = "";
 
@@ -39,6 +40,10 @@ export class ProductList implements OnInit {
       this.listProducts();
     }
     );
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
   }
 
   listProducts() {
