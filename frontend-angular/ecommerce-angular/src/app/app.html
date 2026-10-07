@@ -17,8 +17,9 @@
       <div class="section-content section-content-p30">
         <div class="container-fluid">
           <div class="header-wrap">
-              <app-search-product></app-search-product>
-              <app-cart-status></app-cart-status>
+            <app-search-product></app-search-product>
+            <app-cart-status></app-cart-status>
+            <app-login-status #loginStatus></app-login-status>
           </div>
           <div class="account-wrap"></div>
         </div>
@@ -40,3 +41,30 @@
     <li><a href="#">Help</a></li>
   </ul>
 </footer>
+<!--
+    Transparent layer that prevents the entire application
+    from being clicked while the account menu is open.
+-->
+@if (loginStatus.accountMenuOpen()) {
+
+    <div
+        class="account-overlay"
+        (click)="loginStatus.toggleAccountMenu()">
+    </div>
+
+
+    <!-- Account menu -->
+    <div class="global-account-menu">
+        <ul>
+            <li class="account-email">{{ loginStatus.userEmail() }}</li>
+            <li>
+                <button
+                    type="button"
+                    (click)="loginStatus.logout()">
+                    Logout
+                </button>
+            </li>
+        </ul>
+    </div>
+
+}

@@ -1,0 +1,58 @@
+<div class="login-status-header">
+
+    @if(isAuthenticated()) {
+
+        <div class="account-container">
+
+            <button
+                class="account-avatar"
+                (click)="toggleAccountMenu()">
+
+                {{ userEmail()?.charAt(0)?.toUpperCase() }}
+
+            </button>
+
+            <!-- @if(accountMenuOpen()) {
+
+                <ul class="account-menu">
+
+                    <li class="account-email">
+                        {{ userEmail() }}
+                    </li>
+
+                    <li>
+                        <button>
+                            Profile
+                        </button>
+                    </li>
+
+                    <li>
+                        <button>
+                            Orders
+                        </button>
+                    </li>
+
+                    <li>
+                        <button (click)="logout()">
+                            Logout
+                        </button>
+                    </li>
+
+                </ul>
+
+            } -->
+
+        </div>
+    }
+
+    @if(!isAuthenticated()) {
+
+        <button
+            (click)="login()"
+            class="security-btn">
+            Login
+        </button>
+
+    }
+
+</div>
