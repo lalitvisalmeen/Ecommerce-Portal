@@ -3,9 +3,12 @@ import { ProductList } from './components/product-list/product-list';
 import { ProductDetails } from './components/product-details/product-details/product-details';
 import { CartDetails } from './components/cart-details/cart-details';
 import { Checkout } from './components/checkout/checkout';
+import { Members } from './components/members/members';
+import { AuthGuard } from '@auth0/auth0-angular';
 
 export const routes: Routes = [
-    { path: "checkout", component: Checkout },
+    { path: "checkout", component: Checkout, canActivate: [AuthGuard] },
+    { path: "members", component: Members, canActivate: [AuthGuard] },
     { path: "cart-details", component: CartDetails },
     { path: "products/:id", component: ProductDetails },
     { path: "search/:keyword", component: ProductList },

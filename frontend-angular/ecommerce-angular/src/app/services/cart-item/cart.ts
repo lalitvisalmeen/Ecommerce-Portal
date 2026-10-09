@@ -9,6 +9,16 @@ export class CartService {
     // we use behaviorsubject here, because even if other component subscribe to this event after the event is published, they will be able to get the latest update on the event.
     totalQuantity: Subject<number> = new BehaviorSubject<number>(0);
     totalPrice : Subject<number> = new BehaviorSubject<number>(0);
+    storage: Storage = localStorage;
+
+    constructor(){
+      const data = this.storage.getItem("cartItems");
+      // get the data from storage and update the cartItems
+      if(data){
+         this.cartItems = JSON.parse(data);
+         this.computeCartTotals();
+      }
+   }
 
     addToCart(theCartItem : CartItem){
         // check whether the cart item already exists
@@ -53,6 +63,8 @@ export class CartService {
 
         //log the details(quantity, unitprice, totalprice) of the cartItems
         this.logCartDetails(totalPriceValue, totalQuantity);
+        // store the cart items in session
+        this.cartItemsSession();
 
     }
 
@@ -88,5 +100,9 @@ export class CartService {
     removeItem(cartItem : CartItem){
         this.cartItems = this.cartItems.filter(item => item.id != cartItem.id);
         this.computeCartTotals();
+    }
+
+    cartItemsSession(){
+        this.storage.setItem("cartItems", JSON.stringify(this.cartItems));
     }
 }

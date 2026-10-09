@@ -58,6 +58,9 @@
         <ul>
             <li class="account-email">{{ loginStatus.userEmail() }}</li>
             <li>
+              <button routerLink="/members" type="button" (click)="loginStatus.toggleAccountMenu()">Members</button>
+            </li>
+            <li>
                 <button
                     type="button"
                     (click)="loginStatus.logout()">

@@ -12,41 +12,10 @@
 
             </button>
 
-            <!-- @if(accountMenuOpen()) {
-
-                <ul class="account-menu">
-
-                    <li class="account-email">
-                        {{ userEmail() }}
-                    </li>
-
-                    <li>
-                        <button>
-                            Profile
-                        </button>
-                    </li>
-
-                    <li>
-                        <button>
-                            Orders
-                        </button>
-                    </li>
-
-                    <li>
-                        <button (click)="logout()">
-                            Logout
-                        </button>
-                    </li>
-
-                </ul>
-
-            } -->
-
         </div>
     }
 
     @if(!isAuthenticated()) {
-
         <button
             (click)="login()"
             class="security-btn">

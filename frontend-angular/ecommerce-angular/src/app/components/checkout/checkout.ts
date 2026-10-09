@@ -46,6 +46,8 @@ export class Checkout {
   // state list for billing
   billingStates = signal<State[]>([]);
 
+  storage: Storage = localStorage;
+
 
 
   ngOnInit(): void {
@@ -196,7 +198,11 @@ export class Checkout {
     // reset the form
     this.checkoutFormGroup.reset();
     // redirect the user back to the products page
-    this.router.navigateByUrl("/products");
+    this.router.navigateByUrl("/products");  
+    // remove the cartItems from the storage once the cartItems are empty
+    if(this.storage.getItem("cartItems")){
+      this.storage.removeItem("cartItems");
+    }
   }
 
   billingAddressSameAsShipping(event: Event) {
