@@ -1,5 +1,6 @@
-import { Component, DOCUMENT, Inject, output, signal } from '@angular/core';
+import { Component, DOCUMENT, inject, Inject, output, signal } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
+import { CartService } from '../../services/cart-item/cart';
 
 @Component({
   imports: [],
@@ -13,6 +14,7 @@ export class LoginStatus {
   userEmail = signal<string | undefined>(undefined);
   storage: Storage = sessionStorage;
   accountMenuOpen = signal(false);
+  cartService = inject(CartService);
 
   constructor(private auth: AuthService, @Inject(DOCUMENT) private doc: Document) { }
 
@@ -25,6 +27,7 @@ export class LoginStatus {
     this.auth.user$.subscribe((user) => {
       this.userEmail.set(user?.email);
       this.storage.setItem('userEmail', JSON.stringify(this.userEmail()));
+      this.cartService.setUser(user?.sub ?? null);
       console.log('User ID: ', this.userEmail);
     });
   }

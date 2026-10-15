@@ -13,6 +13,7 @@ import { Address } from '../../common/address/address';
 import { Checkoutservice } from '../../services/checkout/checkoutservice';
 import { Router } from '@angular/router';
 import { NotficationService } from '../../services/notification/notfication-service';
+import { disabled } from '@angular/forms/signals';
 
 @Component({
   imports: [ReactiveFormsModule, CurrencyPipe],
@@ -47,6 +48,7 @@ export class Checkout {
   billingStates = signal<State[]>([]);
 
   storage: Storage = localStorage;
+  userEmail = JSON.parse(sessionStorage.getItem("userEmail")!);
 
 
 
@@ -55,7 +57,7 @@ export class Checkout {
       customer: this.formBuilder.group({
         firstName: ['', [Validators.required, CustomValidator.minLengthAfterTrim(2), CustomValidator.whiteSpace]],
         lastName: ['', [Validators.required, CustomValidator.minLengthAfterTrim(2), CustomValidator.whiteSpace]],
-        email: ['', [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
+        email: [{value: this.userEmail, disabled:true }, [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
       }),
       shippingAddress: this.formBuilder.group({
         country: ['', [Validators.required]],
@@ -140,7 +142,7 @@ export class Checkout {
     // now populate the data required for purchase
     let purchase = new Purchase();
     // pupulate the purchase - customer
-    purchase.customer = this.checkoutFormGroup.get('customer')?.value;
+    purchase.customer = this.checkoutFormGroup.get('customer')?.getRawValue();
     // pupulate the addresses
     const shippingAddress = this.checkoutFormGroup.get('shippingAddress')?.value;
 
@@ -192,17 +194,12 @@ export class Checkout {
 
   resetCart() {
     // reset the cart data
-    this.cartService.cartItems = [];
-    this.cartService.totalPrice.next(0);
-    this.cartService.totalQuantity.next(0);
+    this.cartService.clearCart();
     // reset the form
     this.checkoutFormGroup.reset();
     // redirect the user back to the products page
     this.router.navigateByUrl("/products");  
-    // remove the cartItems from the storage once the cartItems are empty
-    if(this.storage.getItem("cartItems")){
-      this.storage.removeItem("cartItems");
-    }
+   
   }
 
   billingAddressSameAsShipping(event: Event) {
