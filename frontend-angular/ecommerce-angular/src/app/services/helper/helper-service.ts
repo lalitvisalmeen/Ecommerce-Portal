@@ -3,13 +3,14 @@ import { inject, Service } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { Country } from '../../common/country/country';
 import { State } from '../../common/state/state';
+import { environment } from '../../../environments/environment.development';
 
 @Service()
 export class HelperService {
 
     private httpClient = inject(HttpClient);
-    private countryUrl = "http://localhost:8080/api/countries";
-    private stateUrl = "http://localhost:8080/api/states";
+    private countryUrl = environment.backendApiUrl+"/countries";
+    private stateUrl = environment.backendApiUrl+"/states";
 
     // credit card years and months
   creditCardMonths = [

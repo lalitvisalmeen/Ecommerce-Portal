@@ -4,22 +4,21 @@ import { Observable } from 'rxjs';
 import { ProductPage } from '../models/product-page';
 import { ProductCategory } from '../common/product-category/product-category';
 import { Product } from '../common/product';
+import { environment } from '../../environments/environment.development';
 
 @Service()
 export class ProductService {
 
-    private baseUrl = "http://localhost:8080/api/products";
-    private categoryBaseUrl = "http://localhost:8080/api/product-category"
+    private baseUrl = environment.backendApiUrl+"/products";
+    private categoryBaseUrl = environment.backendApiUrl+"/product-category"
     private httpClient = inject(HttpClient);
-    // service class does not support constructor injection.
-    // constructor(private httpClient : HttpClient){
-
-    // }
+    
 
     // Get the products based on the category id and it is paginated
     getProductList(page: number, size: number, categoryId: number): Observable<ProductPage> {
         //Build url to get the list of products for the category id using the parameters categoryId, page and size for pagination
         const searchUrl = `${this.baseUrl}/category/${categoryId}?page=${page}&size=${size}`;
+        console.log("search url",searchUrl)
         return this.getProducts(searchUrl);
     }
 

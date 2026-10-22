@@ -2,6 +2,7 @@ import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/c
 import { inject, Service } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
 import { from, lastValueFrom, Observable } from 'rxjs';
+import { environment } from '../../../environments/environment.development';
 
 @Service()
 export class AuthInterceptorService implements HttpInterceptor{
@@ -13,7 +14,8 @@ export class AuthInterceptorService implements HttpInterceptor{
   }
 
   private async handleAccess(request: HttpRequest<any>, next: HttpHandler): Promise<HttpEvent<any>> {
-    const securedEndpoints = ['http://localhost:8080/api/orders','http://localhost:8080/api/checkout/purchase'];
+    
+    const securedEndpoints = [environment.backendApiUrl + '/orders',environment.backendApiUrl+'/checkout/purchase'];
 
     if (securedEndpoints.some((url) => request.urlWithParams.includes(url))) {
       await this.auth.getAccessTokenSilently().forEach((token) => {
