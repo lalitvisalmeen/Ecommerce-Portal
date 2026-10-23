@@ -31,3 +31,5 @@ build/
 
 ### VS Code ###
 .vscode/
+/src/main/resources/ecommerce-keystore.p12
+springboot-localhost.cer
