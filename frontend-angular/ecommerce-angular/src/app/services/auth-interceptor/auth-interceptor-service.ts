@@ -15,7 +15,7 @@ export class AuthInterceptorService implements HttpInterceptor{
 
   private async handleAccess(request: HttpRequest<any>, next: HttpHandler): Promise<HttpEvent<any>> {
     
-    const securedEndpoints = [environment.backendApiUrl + '/orders',environment.backendApiUrl+'/checkout/purchase'];
+    const securedEndpoints = [environment.backendApiUrl + '/orders',environment.backendApiUrl+'/checkout/purchase', environment.backendApiUrl+'/checkout/payment-intent'];
 
     if (securedEndpoints.some((url) => request.urlWithParams.includes(url))) {
       await this.auth.getAccessTokenSilently().forEach((token) => {

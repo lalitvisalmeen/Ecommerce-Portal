@@ -13,7 +13,8 @@ import { Address } from '../../common/address/address';
 import { Checkoutservice } from '../../services/checkout/checkoutservice';
 import { Router } from '@angular/router';
 import { NotficationService } from '../../services/notification/notfication-service';
-import { disabled } from '@angular/forms/signals';
+import { environment } from '../../../environments/environment.development';
+import { PaymentInfo } from '../../common/payment-info/payment-info';
 
 @Component({
   imports: [ReactiveFormsModule, CurrencyPipe],
@@ -50,9 +51,20 @@ export class Checkout {
   storage: Storage = localStorage;
   userEmail = JSON.parse(sessionStorage.getItem("userEmail")!);
 
+  // to include stripe elements into checkout html
+  // initialize stripe API
+  stripe = Stripe(environment.stripePublishableKey);
+
+  paymentInfo: PaymentInfo = new PaymentInfo();
+  cardElement:any;
+  displayError:any = "";
+  isDisabled:boolean = false;
+
 
 
   ngOnInit(): void {
+    // setup stripe payment form
+    this.setupStripePaymentForm();
     this.checkoutFormGroup = this.formBuilder.group({
       customer: this.formBuilder.group({
         firstName: ['', [Validators.required, CustomValidator.minLengthAfterTrim(2), CustomValidator.whiteSpace]],
@@ -74,20 +86,22 @@ export class Checkout {
         zipcode: ['', [Validators.required, CustomValidator.minLengthAfterTrim(5), CustomValidator.whiteSpace]],
       }),
       paymentDetails: this.formBuilder.group({
+        /*
         cardType: ['', [Validators.required]],
         nameOnCard: ['', [Validators.required, CustomValidator.minLengthAfterTrim(2), CustomValidator.whiteSpace]],
         cardNumber: ['', [Validators.required, Validators.pattern(/^\d{4}(\s?\d{4}){3}$/)]],
         securityCode: ['', [Validators.required, Validators.pattern(/^\d{3,4}$/)]],
         expiryMonth: [{ value: '', disabled: true }, [Validators.required]],
         expiryYear: ['', [Validators.required]],
+        */
       })
     });
 
 
     // get the years list to display
-    this.helperService.getCreditCardYears().subscribe(
-      data => this.creditCardYears.set(data)
-    );
+    // this.helperService.getCreditCardYears().subscribe(
+    //   data => this.creditCardYears.set(data)
+    // );
 
     // subscribe to the totalquantity and totalPrice
     this.reviewCartDetails();
@@ -169,27 +183,59 @@ export class Checkout {
     purchase.order = order;
     purchase.orderItems = orderItems;
 
-    // now call the checkoutservice to make an api call and pass the purchase to that
-    this.checkoutService.placeOrder(purchase).subscribe({
+    // setup the amount and currency for the payment intent
+    this.paymentInfo.amount = Math.round(this.totalPrice() * 100);
+    this.paymentInfo.currency = "CAD";
+    this.paymentInfo.receiptEmail = purchase.customer?.email;
 
-      next: response => {
-        const message = `Your order has been received. Tracking number for your reference is ${response.orderTrackingNumber}`;
-        this.notificationService.show(message, 'success');
-        this.resetCart();
-      },
-      error: err => {
-        const message = "There was an error in placing the order. Please try again."
-        this.notificationService.show(message, 'danger');
+    // if valid form then call the payment intent and then call the confirmcardpayment to handle payment in stripe server without saving the information in our db.
+    if(!this.checkoutFormGroup.invalid && this.displayError.textContent == ""){
+      this.isDisabled = true;
+      this.checkoutService.createPaymentIntent(this.paymentInfo).subscribe(
+          (paymentIntentResponse) => {
+            this.stripe.confirmCardPayment(paymentIntentResponse.client_secret, {
+              payment_method : {
+                card : this.cardElement,
+                billing_details: {
+                  email : purchase.customer?.email,
+                  name: `${purchase.customer?.firstName} ${purchase.customer?.lastName}`,
+                  address: {
+                    line1: purchase.billingAddress?.street,
+                    city: purchase.billingAddress?.city,
+                    state: purchase.billingAddress?.state,
+                    postal_code: purchase.billingAddress?.zipCode,
+                    country: this.billingCountry?.value.code
+                  }
+                }
 
-        setTimeout(() => {
-          window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-          });
-        });
-      }
-    });
+              }
+            }, {handleActions : false})
+            .then((result: any) => {
+              if(result.error){
+                const message = `There was an error in processing your payment. ${result.error.message}`;
+                this.notificationService.show(message, 'danger');
+                this.setScrollTop();
+              } else{
+                // once the payment is successful, call the checkoutService to store the order details to db
+                this.checkoutService.placeOrder(purchase).subscribe({
 
+                next: response => {
+                  const message = `Your order has been received. Tracking number for your reference is ${response.orderTrackingNumber}`;
+                  this.notificationService.show(message, 'success');
+                  this.resetCart();
+                },
+                error: err => {
+                  const message = "There was an error in placing the order. Please try again."
+                  this.notificationService.show(message, 'danger');
+                  this.setScrollTop();
+                }
+              });
+              }
+              this.isDisabled = false;
+            });
+          }
+      )
+    }
   }
 
   resetCart() {
@@ -283,5 +329,34 @@ export class Checkout {
     this.cartService.totalQuantity.subscribe(
       data => this.totalQuantity.set(data)
     );
+  }
+
+  setupStripePaymentForm(){
+
+    // create a handle to load stripe elements
+    var elements = this.stripe.elements();
+    // create a card element and hide the postal code field
+    this.cardElement = elements.create('card', {hidePostalCode : true, disableLink: true});
+    // render the card elements to the respective div
+    this.cardElement.mount("#card-element");
+    // add event binding for change event on the card element
+    this.cardElement.on('change', (event:any) => {
+        this.displayError = document.getElementById("card-errors");
+        if (event.error){
+          // show the validation errors to the client.
+          this.displayError.textContent = event.error.message;
+        }else{
+          this.displayError.textContent = "";
+        }
+    })
+  }
+
+  setScrollTop(){
+    setTimeout(() => {
+                    window.scrollTo({
+                      top: 0,
+                      behavior: 'smooth'
+                    });
+                  });
   }
 }

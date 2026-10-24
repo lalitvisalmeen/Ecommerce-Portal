@@ -266,112 +266,20 @@
                         </div>
                     </div>
                 </div>
-                <!-- payment details -->
+                <!--stripe payment elements -->
                 <div formGroupName="paymentDetails" class="form-area">
-                    <h3>Payment Details </h3>
-                    <div class="row">
-                        <div class="col-md-2">
-                            <label>Card Type</label>
-                        </div>
-                        <div class="col-md-9 input-space">
-                            <select formControlName="cardType" class="form-select">
-                                <option value="">--select--</option>
-                                <option value="visa">Visa</option>
-                                <option value="mastercard">Mastercard</option>
-                            </select>
-                            @if(cardType?.invalid && (cardType.dirty || cardType.touched)){
-                            @if(cardType.hasError('required')){
-                            <p class="text-danger small ms-2">Card Type is required</p>
-                            }
-                            }
-                        </div>
+                    <h3>Credit or Debit Card</h3>
+                    <div id="card-element">
+                        <!-- a stripe element will be inserted here-->
+
                     </div>
-                    <div class="row">
-                        <div class="col-md-2">
-                            <label>Name on Card</label>
-                        </div>
-                        <div class="col-md-9 input-space">
-                            <input formControlName="nameOnCard" type="text">
-                            @if(nameOnCard?.invalid && (nameOnCard.dirty || nameOnCard.touched)){
-                            @if(nameOnCard.hasError('required') || nameOnCard.hasError('whitespace')){
-                            <p class="text-danger small ms-2">Name on card is required</p>
-                            }
-                            @else if(nameOnCard.hasError('minLengthTrim')){
-                            <p class="text-danger small ms-2">Name on card must be of atleast 2 characters long</p>
-                            }
-                            }
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-2">
-                            <label>Card Number</label>
-                        </div>
-                        <div class="col-md-9 input-space">
-                            <input formControlName="cardNumber" type="text" placeholder="1234 1234 1234 1234">
-                            @if(cardNumber?.invalid && (cardNumber.dirty || cardNumber.touched)){
-                            @if(cardNumber.hasError('required')){
-                            <p class="text-danger small ms-2">Card Number is required</p>
-                            }
-                            @else if(cardNumber.hasError('pattern')){
-                            <p class="text-danger small ms-2">Card number must be 16 digits</p>
-                            }
-                            }
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-2">
-                            <label>Security Code</label>
-                        </div>
-                        <div class="col-md-9 input-space">
-                            <input formControlName="securityCode" type="text">
-                            @if(securityCode?.invalid && (securityCode.dirty || securityCode.touched)){
-                            @if(securityCode.hasError('required')){
-                            <p class="text-danger small ms-2">Security code is required</p>
-                            }
-                            @else if(securityCode.hasError('pattern')){
-                            <p class="text-danger small ms-2">Security code must be 3 or 4 digits</p>
-                            }
-                            }
-                        </div>
+                    <!-- display any validation errors-->
+                    <div id="card-errors" [class]="displayError.textContent !== '' ? 'text-danger small ms-2' : '' " >
+
                     </div>
 
-                    <div class="row">
-                        <div class="col-md-2">
-                            <label>Expiration Year </label>
-                        </div>
-                        <div class="col-md-9 input-space">
-                            <select formControlName="expiryYear" (change)="handleMonthsAndYears()" class="form-select">
-                                <option>--select--</option>
-                                @for(year of creditCardYears(); track $index){
-                                <option>{{ year }}</option>
-                                }
-                            </select>
-                            @if(expiryYear?.invalid && (expiryYear.dirty || expiryYear.touched)){
-                            @if(expiryYear.hasError('required')){
-                            <p class="text-danger small ms-2">Expiration year is required</p>
-                            }
-                            }
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-2">
-                            <label>Expiration Month</label>
-                        </div>
-                        <div class="col-md-9 input-space">
-                            <select formControlName="expiryMonth" class="form-select">
-                                <option value=""> --select--</option>
-                                @for(month of creditCardMonths(); track month.value){
-                                <option [value]="month.value">{{ month.name }}</option>
-                                }
-                            </select>
-                            @if(expiryMonth?.invalid && (expiryMonth.dirty || expiryMonth.touched)){
-                            @if(expiryMonth.hasError('required')){
-                            <p class="text-danger small ms-2">Expiration month is required</p>
-                            }
-                            }
-                        </div>
-                    </div>
                 </div>
+                
                 <!-- order details -->
                 <div class="form-area">
                     <h3>Review Your Order</h3>
@@ -394,7 +302,7 @@
                 </div>
                 <!-- submit button -->
                 <div class="text-center">
-                    <button type="submit" class="btn btn-primary add-to-cart-btn">Purchase</button>
+                    <button type="submit" class="btn btn-primary add-to-cart-btn". [disabled]="isDisabled">Purchase</button>
                 </div>
             </form>
         </div>
