@@ -42,6 +42,7 @@ public class CheckoutServiceImpl implements CheckoutService{
         // Include shipping and billing address to order
         order.setBillingAddress(purchase.getBillingAddress());
         order.setShippingAddress(purchase.getShippingAddress());
+        order.setStatus("Submitted");
 
         // Include customer to order
         Customer customer = purchase.getCustomer();
@@ -78,6 +79,6 @@ public class CheckoutServiceImpl implements CheckoutService{
 
     private String generateOrderTrackingNumber(){
         // generate a random uuid number
-        return UUID.randomUUID().toString();
+        return "ORD-" + UUID.randomUUID().toString().substring(0, 10).toUpperCase();
     }
 }

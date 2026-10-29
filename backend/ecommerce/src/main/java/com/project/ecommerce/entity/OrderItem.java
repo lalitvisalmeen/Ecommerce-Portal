@@ -25,6 +25,9 @@ public class OrderItem {
     @Column(name = "unit_price")
     private float unitPrice;
 
+    @Column(name = "product_name")
+    private String productName;
+
     @ManyToOne
     @JoinColumn(name="order_id")
     @JsonIgnore

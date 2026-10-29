@@ -5,7 +5,6 @@ import com.project.ecommerce.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,6 +21,11 @@ public class OrderController {
     @GetMapping("/search")
     public Page<Order> getCustomerOrders(@RequestParam("email") String email, Pageable pageable){
         return this.orderService.findOrderByCustomerEmail(email, pageable);
+    }
+
+    @GetMapping("/{id}")
+    public Order findOrderByTrackingNumber(@PathVariable Long id){
+        return this.orderService.findOrderById(id);
     }
 
 

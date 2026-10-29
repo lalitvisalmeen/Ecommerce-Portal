@@ -20,4 +20,9 @@ public class OrderServiceImpl implements OrderService{
     public Page<Order> findOrderByCustomerEmail(String email, Pageable pageable) {
         return this.orderRepository.findByCustomerEmailOrderByCreatedDateDesc(email, pageable);
     }
+
+    public Order findOrderById(Long id){
+        return this.orderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order not found: " + id));
+    }
 }

@@ -7,4 +7,6 @@ import org.springframework.data.domain.Pageable;
 public interface OrderService {
 
     Page<Order> findOrderByCustomerEmail(String email, Pageable pageable);
+
+    Order findOrderById(Long id);
 }
