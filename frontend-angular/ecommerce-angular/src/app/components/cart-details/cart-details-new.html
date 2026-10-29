@@ -1,0 +1,166 @@
+
+<div class="main-content">
+    <div class="section-content section-content-p30 main-content-section">
+        <div class="container-fluid">
+
+            @if (cartItems().length > 0) {
+
+                <div class="cart-page">
+
+                    <!-- Page heading -->
+                    <div class="cart-page-header">
+                        <h2>Shopping Cart</h2>
+                        <span>{{ totalQuantity() }} items</span>
+                    </div>
+
+                    <div class="cart-layout">
+
+                        <!-- Cart items -->
+                        <div class="cart-items-section">
+
+                            @for (cartItem of cartItems(); track cartItem.id) {
+
+                                <div class="cart-item-card">
+
+                                    <!-- Product image -->
+                                    <div class="cart-item-image">
+                                        <img
+                                            [src]="cartItem.imageUrl"
+                                            [alt]="cartItem.name"
+                                        />
+                                    </div>
+
+                                    <!-- Product details -->
+                                    <div class="cart-item-details">
+
+                                        <h5>{{ cartItem.name }}</h5>
+
+                                        <p class="cart-item-unit-price">
+                                            {{ cartItem.unitPrice | currency:"USD" }} each
+                                        </p>
+
+                                        <div class="cart-quantity-control">
+                                            <span class="quantity-label">Quantity</span>
+
+                                            <div class="quantity-buttons">
+                                                <button
+                                                    type="button"
+                                                    class="quantity-btn"
+                                                    (click)="decrementQuantity(cartItem)"
+                                                    [attr.aria-label]="'Decrease quantity of ' + cartItem.name">
+                                                    <i class="fas fa-minus"></i>
+                                                </button>
+
+                                                <span class="quantity-value">
+                                                    {{ cartItem.quantity }}
+                                                </span>
+
+                                                <button
+                                                    type="button"
+                                                    class="quantity-btn"
+                                                    (click)="addToCart(cartItem)"
+                                                    [attr.aria-label]="'Increase quantity of ' + cartItem.name">
+                                                    <i class="fas fa-plus"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <!-- Subtotal and remove -->
+                                    <div class="cart-item-actions">
+
+                                        <span class="cart-item-subtotal">
+                                            {{ cartItem.quantity * cartItem.unitPrice | currency:"USD" }}
+                                        </span>
+
+                                        <button
+                                            type="button"
+                                            class="remove-cart-item"
+                                            (click)="removeItem(cartItem)">
+                                            <i class="fas fa-trash-alt"></i>
+                                            Remove
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
+                            }
+
+                            <a routerLink="/products" class="continue-shopping-link">
+                                <i class="fas fa-arrow-left"></i>
+                                Continue Shopping
+                            </a>
+
+                        </div>
+
+                        <!-- Order summary -->
+                        <aside class="cart-summary">
+
+                            <h4>Order Summary</h4>
+
+                            <div class="cart-summary-row">
+                                <span>Items ({{ totalQuantity() }})</span>
+                                <span>{{ totalPrice() | currency:"USD" }}</span>
+                            </div>
+
+                            <div class="cart-summary-row">
+                                <span>Shipping</span>
+                                <span class="free-shipping">FREE</span>
+                            </div>
+
+                            <div class="cart-summary-divider"></div>
+
+                            <div class="cart-summary-total">
+                                <span>Total</span>
+                                <span>{{ totalPrice() | currency:"USD" }}</span>
+                            </div>
+
+                            <a
+                                routerLink="/checkout"
+                                class="cart-checkout-btn">
+                                Proceed to Checkout
+                                <i class="fas fa-arrow-right"></i>
+                            </a>
+
+                            <p class="cart-secure-note">
+                                <i class="fas fa-lock"></i>
+                                Secure checkout
+                            </p>
+
+                        </aside>
+
+                    </div>
+                </div>
+
+            } @else {
+
+                <!-- Empty cart -->
+                <div class="empty-cart-container">
+                    <div class="empty-cart-card">
+
+                        <div class="empty-cart-icon">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                        </div>
+
+                        <h3>Your cart is waiting</h3>
+
+                        <p>
+                            Looks like you haven't added anything to your cart yet.
+                            Explore our collection and find something you love.
+                        </p>
+
+                        <a routerLink="/products" class="empty-cart-button">
+                            <i class="fa-solid fa-arrow-left"></i>
+                            Continue Shopping
+                        </a>
+
+                    </div>
+                </div>
+
+            }
+
+        </div>
+    </div>
+</div>

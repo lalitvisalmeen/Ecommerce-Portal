@@ -1,19 +1,21 @@
-<div class="detail-section">
-    <div class="container-fluid">
-        @if(product(); as p){
-        <img src="{{ p.imageUrl }}" class="detail-img">
-        <h3> {{ product()?.name }}</h3>
-        <div class="price">
-            {{ p.unitPrice | currency:'USD' }}
-        </div>
-        <button (click)="addToCart()" class="btn btn-primary btn-sm add-to-cart-btn"> Add to cart</button>
-        <hr>
-        <h4> Description </h4>
-        <p> {{ p.description }}</p>
-        }
+<div class="main-content">
+    <div class="section-content section-content-p30 main-content-section">
+            <div class="container-fluid">
+                @if(product(); as p){
+                <img src="{{ p.imageUrl }}" class="detail-img">
+                <h3> {{ product()?.name }}</h3>
+                <div class="price">
+                    {{ p.unitPrice | currency:'USD' }}
+                </div>
+                <button (click)="addToCart()" class="btn btn-primary btn-sm add-to-cart-btn"> Add to cart</button>
+                <hr>
+                <h4> Description </h4>
+                <p> {{ p.description }}</p>
+                }
 
-        <a routerLink="/products" class="mt-5">Back to Product List</a>
+                <a routerLink="/products" class="mt-5">Back to Product List</a>
 
 
+            </div>
     </div>
 </div>

@@ -1,0 +1,413 @@
+<div class="main-content page-m checkout-page">
+    <div class="section-content section-content-p30 main-content-section">
+        <div class="container-fluid checkout-container">
+
+            @if (notificationService.message()) {
+            <div class="alert mb-4" [class.alert-success]="notificationService.type() === 'success'"
+                [class.alert-danger]="notificationService.type() === 'danger'" role="alert">
+                {{ notificationService.message() }}
+            </div>
+            }
+
+            <div class="checkout-header">
+                <h1>Checkout</h1>
+                <p>Complete your details to place your order securely.</p>
+            </div>
+
+            <form [formGroup]="checkoutFormGroup" (ngSubmit)="onSubmit()" class="checkout-layout">
+
+                <div class="checkout-grid">
+
+                    <!-- LEFT: ACCORDION SECTIONS -->
+                    <div class="checkout-details">
+
+                        <details class="checkout-accordion"
+                            [class.checkout-accordion-invalid]="checkoutFormGroup.get('customer')?.invalid && checkoutFormGroup.get('customer')?.touched"
+                            open>
+                            <summary>
+                                <span class="accordion-number">1</span>
+                                <span class="accordion-title">
+                                    <strong>Customer Information</strong>
+                                    <small>Your contact details</small>
+                                </span>
+                                <span class="accordion-chevron"></span>
+                            </summary>
+
+                            <div class="accordion-content">
+                                <div formGroupName="customer">
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label>First Name</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <div class="input-space">
+                                                <input formControlName="firstName" type="text">
+                                                @if(firstName?.invalid && (firstName.dirty || firstName.touched)){
+                                                @if(firstName.hasError('required') || firstName.hasError('whitespace')){
+                                                <p class="text-danger small ms-2">First Name is required</p>
+                                                }
+                                                @else if(firstName.hasError('minLengthTrim')){
+                                                <p class="text-danger small ms-2">First Name must be atleast 2
+                                                    characters long</p>
+                                                }
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label>Last Name</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <div class="input-space">
+                                                <input formControlName="lastName" type="text">
+                                                @if(lastName?.invalid && (lastName.dirty || lastName.touched)){
+                                                @if(lastName.hasError('required') || lastName.hasError('whitespace')){
+                                                <p class="text-danger small ms-2">Last Name is required</p>
+                                                }
+                                                @else if(lastName.hasError('minLengthTrim')){
+                                                <p class="text-danger small ms-2">Last Name must be atleast 2 characters
+                                                    long</p>
+                                                }
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label>Email</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <div class="input-space">
+                                                <input formControlName="email" type="text">
+                                                @if(email?.invalid && (email.dirty || email.touched)){
+                                                @if(email.hasError('pattern')){
+                                                <p class="text-danger small ms-2">Email must be in a valid email address
+                                                    format </p>
+                                                }
+                                                @if(email.hasError('required')){
+                                                <p class="text-danger small ms-2">Email is required</p>
+                                                }
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </details>
+
+                        <details class="checkout-accordion"
+                            [class.checkout-accordion-invalid]="checkoutFormGroup.get('shippingAddress')?.invalid && checkoutFormGroup.get('shippingAddress')?.touched">
+                            <summary>
+                                <span class="accordion-number">2</span>
+                                <span class="accordion-title">
+                                    <strong>Shipping Address</strong>
+                                    <small>Where should we deliver your order?</small>
+                                </span>
+                                <span class="accordion-chevron"></span>
+                            </summary>
+
+                            <div class="accordion-content">
+                                <div formGroupName="shippingAddress">
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label>Country</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <div class="input-space">
+                                                <select formControlName="country" class="form-select"
+                                                    (change)="getStates('shipping')">
+                                                    <option value="">--select--</option>
+                                                    @for(country of countries(); track country.id){
+                                                    <option [ngValue]="country">{{ country.name }}</option>
+                                                    }
+                                                </select>
+                                                @if(shippingCountry?.invalid && (shippingCountry.dirty ||
+                                                shippingCountry.touched)){
+                                                @if(shippingCountry.hasError('required')){
+                                                <p class="text-danger small ms-2">Country is required</p>
+                                                }
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label>Street</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <div class="input-space">
+                                                <input formControlName="street" type="text">
+                                                @if(shippingStreet?.invalid && (shippingStreet.dirty ||
+                                                shippingStreet.touched)){
+                                                @if(shippingStreet.hasError('required') ||
+                                                shippingStreet.hasError('whitespace')){
+                                                <p class="text-danger small ms-2">Street is required</p>
+                                                }
+                                                @else if(shippingStreet.hasError('minLengthTrim')){
+                                                <p class="text-danger small ms-2">Street must be atleast 2 characters
+                                                    long</p>
+                                                }
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label>City</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <div class="input-space">
+                                                <input formControlName="city" type="text">
+                                                @if(shippingCity?.invalid && (shippingCity.dirty ||
+                                                shippingCity.touched)){
+                                                @if(shippingCity.hasError('required') ||
+                                                shippingCity.hasError('whitespace')){
+                                                <p class="text-danger small ms-2">City is required</p>
+                                                }
+                                                @else if(shippingCity.hasError('minLengthTrim')){
+                                                <p class="text-danger small ms-2">City must be atleast 2 characters long
+                                                </p>
+                                                }
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label>State</label>
+                                        </div>
+                                        <div class="col-md-9 input-space">
+                                            <select formControlName="state" class="form-select">
+                                                <option value="">--select--</option>
+                                                @for(state of shippingStates(); track state.id){
+                                                <option [ngValue]="state">{{ state.name }}</option>
+                                                }
+                                            </select>
+                                            @if(shippingState?.invalid && (shippingState.dirty ||
+                                            shippingState.touched)){
+                                            @if(shippingState.hasError('required')){
+                                            <p class="text-danger small ms-2">State is required</p>
+                                            }
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label>Zipcode</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <div class="input-space">
+                                                <input type="text" formControlName="zipcode">
+                                                @if(shippingZipcode?.invalid && (shippingZipcode.dirty ||
+                                                shippingZipcode.touched)){
+                                                @if(shippingZipcode.hasError('required') ||
+                                                shippingZipcode.hasError('whitespace')){
+                                                <p class="text-danger small ms-2">Zipcode is required</p>
+                                                }
+                                                @else if(shippingZipcode.hasError('minLengthTrim')){
+                                                <p class="text-danger small ms-2">Zipcode must be atleast 5
+                                                    characters/digits long</p>
+                                                }
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </details>
+
+                        <details class="checkout-accordion"
+                            [class.checkout-accordion-invalid]="checkoutFormGroup.get('billingAddress')?.invalid && checkoutFormGroup.get('billingAddress')?.touched">
+                            <summary>
+                                <span class="accordion-number">3</span>
+                                <span class="accordion-title">
+                                    <strong>Billing Address</strong>
+                                    <small>Your payment billing address</small>
+                                </span>
+                                <span class="accordion-chevron"></span>
+                            </summary>
+
+                            <div class="accordion-content">
+
+                                <div class="billing-same-option">
+                                    <label class="au-checkbox">
+                                        <input type="checkbox" (change)="billingAddressSameAsShipping($event)">
+                                        <span class="au-checkmark"></span>
+                                        Billing address same as shipping address
+                                    </label>
+                                </div>
+
+                                <div formGroupName="billingAddress">
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label>Country</label>
+                                        </div>
+                                        <div class="col-md-9 input-space">
+                                            <select formControlName="country" class="form-select"
+                                                (change)="getStates('billing')">
+                                                <option value="">--select--</option>
+                                                @for(country of countries(); track country.id){
+                                                <option [ngValue]="country">{{ country.name }}</option>
+                                                }
+                                            </select>
+                                            @if(billingCountry?.invalid && (billingCountry.dirty ||
+                                            billingCountry.touched)){
+                                            @if(billingCountry.hasError('required')){
+                                            <p class="text-danger small ms-2">Country is required</p>
+                                            }
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label>Street</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <div class="input-space">
+                                                <input formControlName="street" type="text">
+                                                @if(billingStreet?.invalid && (billingStreet.dirty ||
+                                                billingStreet.touched)){
+                                                @if(billingStreet.hasError('required') ||
+                                                billingStreet.hasError('whitespace')){
+                                                <p class="text-danger small ms-2">Street is required</p>
+                                                }
+                                                @else if(billingStreet.hasError('minLengthTrim')){
+                                                <p class="text-danger small ms-2">Street must be atleast 2 characters
+                                                    long</p>
+                                                }
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label>City</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <div class="input-space">
+                                                <input formControlName="city" type="text">
+                                                @if(billingCity?.invalid && (billingCity.dirty || billingCity.touched)){
+                                                @if(billingCity.hasError('required') ||
+                                                billingCity.hasError('whitespace')){
+                                                <p class="text-danger small ms-2">City is required</p>
+                                                }
+                                                @else if(billingCity.hasError('minLengthTrim')){
+                                                <p class="text-danger small ms-2">City must be of atleast 2 characters
+                                                    long</p>
+                                                }
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label>State</label>
+                                        </div>
+                                        <div class="col-md-9 input-space">
+                                            <select formControlName="state" class="form-select">
+                                                <option value="">--select--</option>
+                                                @for(state of billingStates(); track state.id){
+                                                <option [ngValue]="state">{{ state.name }}</option>
+                                                }
+                                            </select>
+                                            @if(billingState?.invalid && (billingState.dirty || billingState.touched)){
+                                            @if(billingState.hasError('required')){
+                                            <p class="text-danger small ms-2">State is required</p>
+                                            }
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label>Zipcode</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <div class="input-space">
+                                                <input type="text" formControlName="zipcode">
+                                                @if(billingZipcode?.invalid && (billingZipcode.dirty ||
+                                                billingZipcode.touched)){
+                                                @if(billingZipcode.hasError('required') ||
+                                                billingZipcode.hasError('whitespace')){
+                                                <p class="text-danger small ms-2">Zipcode is required</p>
+                                                }
+                                                @else if(billingZipcode.hasError('minLengthTrim')){
+                                                <p class="text-danger small ms-2">Zipcode must have atleast 5
+                                                    characters/digits long</p>
+                                                }
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </details>
+
+                        <details class="checkout-accordion" [class.checkout-accordion-invalid]="(isSubmitted && !cardTouched()) || (cardTouched() && !cardComplete())">
+                            <summary>
+                                <span class="accordion-number">4</span>
+                                <span class="accordion-title">
+                                    <strong>Payment Method</strong>
+                                    <small>Credit or debit card</small>
+                                </span>
+                                <span class="accordion-chevron"></span>
+                            </summary>
+
+                            <div class="accordion-content">
+                                <div formGroupName="paymentDetails">
+                                    <p class="payment-description">
+                                        Enter your card details to complete your order.
+                                    </p>
+
+                                    <div id="card-element"></div>
+
+                                    <div id="card-errors" class="small ms-2" [class.text-danger]="cardError() !== ''">
+                                        {{ cardError() }}
+                                    </div>
+                                </div>
+                            </div>
+                        </details>
+
+                    </div>
+
+                    <!-- RIGHT: STICKY ORDER SUMMARY -->
+                    <aside class="checkout-sidebar">
+                        <div class="order-summary">
+
+                            <h3>Order Summary</h3>
+
+                            <div class="summary-row">
+                                <span>Total quantity</span>
+                                <strong>{{ totalQuantity() }}</strong>
+                            </div>
+
+                            <div class="summary-row">
+                                <span>Shipping</span>
+                                <strong class="free-shipping">FREE</strong>
+                            </div>
+
+                            <div class="summary-total">
+                                <span>Total price</span>
+                                <strong>
+                                    {{ totalPrice() | currency:"USD" }}
+                                </strong>
+                            </div>
+
+                            <button type="submit" class="checkout-purchase" [disabled]="isDisabled">
+                                Purchase
+                            </button>
+
+                            <p class="secure-checkout-note">
+                                Complete your purchase using the secure card payment form.
+                            </p>
+                        </div>
+                    </aside>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

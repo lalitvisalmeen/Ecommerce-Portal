@@ -1,0 +1,12 @@
+.footer-pagination .col-md-3 {
+    white-space: nowrap;
+}
+
+.footer-pagination .col-md-3 span {
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.footer-pagination .col-md-3 select {
+    min-width: 65px;
+}

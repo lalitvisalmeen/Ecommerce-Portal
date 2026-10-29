@@ -8,7 +8,7 @@ import { RouterLink } from '@angular/router';
   imports: [CurrencyPipe, RouterLink],
   selector: 'app-cart-details',
   styleUrl: './cart-details.css',
-  templateUrl: './cart-details.html',
+  templateUrl: './cart-details-new.html',
 })
 export class CartDetails {
    cartItems = signal<CartItem[]>([]);

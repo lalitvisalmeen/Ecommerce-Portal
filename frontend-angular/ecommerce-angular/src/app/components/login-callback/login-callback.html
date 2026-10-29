@@ -1,1 +1,17 @@
-<p>login-callback works!</p>
+<div class="container mt-5">
+  @if (error$ | async) {
+    <div class="alert alert-danger" role="alert">
+      <h4 class="alert-heading">Sign-in failed</h4>
+      <p>We couldn't complete your sign-in. Please try again.</p>
+      <a routerLink="/products" class="btn btn-primary">
+        Return to products
+      </a>
+    </div>
+  } @else {
+    <div class="text-center" role="status">
+      <div class="spinner-border text-primary mb-3"
+           aria-hidden="true"></div>
+      <p>Completing sign-in. Please wait...</p>
+    </div>
+  }
+</div>

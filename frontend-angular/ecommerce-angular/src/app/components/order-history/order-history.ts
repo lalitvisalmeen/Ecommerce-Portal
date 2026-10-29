@@ -1,13 +1,14 @@
 import { Component, inject, signal } from '@angular/core';
 import { OrderHistoryService } from '../../services/order-history/order-history-service';
 import { OrderHistory } from '../../common/order-history/order-history';
-import { CurrencyPipe } from '@angular/common';
+import { CurrencyPipe, DatePipe } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
-  imports: [CurrencyPipe],
+  imports: [CurrencyPipe, DatePipe, RouterLink],
   selector: 'app-order-history',
   styleUrl: './order-history.css',
-  templateUrl: './order-history.html',
+  templateUrl: './order-history-new.html',
 })
 export class OrderHistoryComponent {
 

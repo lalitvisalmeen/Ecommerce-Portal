@@ -1,5 +1,5 @@
 <div class="main-content">
-    <div class="section-content section-content-p30">
+    <div class="section-content section-content-p30 main-content-section">
         @if(categoryName){
         <h4>Category: {{ categoryName }}</h4>
         <hr>
@@ -17,7 +17,7 @@
             <div class="row">
                 <!-- Loop over the collection of products -->
                 @for(product of products() ; track product.id){
-                <div class="col-md-3">
+                <div class="col-6 col-lg-3">
                     <div class="product-box">
                         <a routerLink="/products/{{ product.id }}" class="text-decoration-none d-block">
                             <img src="{{ product.imageUrl }}" alt="{{ product.name }}" class="image-responsive">
@@ -26,8 +26,9 @@
                             <h1>{{ product.name }}</h1>
                         </a>
                         <div class="price">{{ product.unitPrice | currency:'USD'}}</div>
-                        <button (click)="addToCart(product)" class="btn btn-primary btn-sm add-to-cart-btn">Add to
-                            cart</button>
+                        <button (click)="addToCart(product)" class="btn btn-primary btn-sm add-to-cart-btn">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                            Add to cart</button>
                     </div>
                 </div>
                 }
@@ -54,9 +55,8 @@
                             </div>
                             <div class="col-md-3 d-flex align-items-center justify-content-center mb-2">
                                 <span class="me-2">Page Size</span>
-                                <select #selectSize (change)="updatePageSize(selectSize.value)">
-                                    <option>2</option>
-                                    <option selected>5</option>
+                                <select #selectSize (change)="updatePageSize(selectSize.value)" [value]="pageSize()">
+                                    <option>5</option>
                                     <option>10</option>
                                     <option>20</option>
                                     <option>50</option>

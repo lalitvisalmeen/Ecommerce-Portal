@@ -23,7 +23,7 @@ export class ProductList implements OnInit {
 
   // pagination fields
   pageNumber = signal<number>(1);
-  pageSize = signal<number>(5);
+  pageSize = signal<number>(10);
   pageTotalElements = signal<number>(0);
   notificationService = inject(NotficationService);
 

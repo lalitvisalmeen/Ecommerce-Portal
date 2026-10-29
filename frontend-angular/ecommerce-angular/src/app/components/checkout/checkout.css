@@ -1,0 +1,119 @@
+
+/* ==========================================
+   CHECKOUT LAYOUT - FIX LEFT SPACING
+   ========================================== */
+
+/* Override the original 10% 30% 10% 5% padding */
+.main-content.page-m {
+    box-sizing: border-box;
+    padding: 120px 30px 30px 0;
+    min-height: 100vh;
+    /* background: #f6f8fb; */
+}
+
+/* Target the actual element used by your checkout page */
+.main-content.page-m .section-content.section-content-p30.main-content-section {
+    box-sizing: border-box;
+    width: auto;
+    max-width: none;
+
+    /* Preserve your existing -100px alignment adjustment */
+    margin-left: -100px;
+    margin-right: 30px;
+
+    padding: 0 30px 0 0;
+}
+
+/* Keep the checkout form panels clean */
+.main-content.page-m .form-area {
+    margin-bottom: 24px;
+    padding: 26px 30px;
+    background: #fff;
+    border: 1px solid #e0e6ee;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(31, 45, 61, 0.04);
+}
+
+/* Section headings */
+.main-content.page-m .form-area h3 {
+    position: static;
+    margin: 0 0 24px;
+    padding: 0 0 15px;
+    background: transparent;
+    border-bottom: 1px solid #e8edf3;
+    color: #20324b;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+/* Form fields */
+.main-content.page-m .form-area input[type="text"],
+.main-content.page-m .form-area input[type="email"],
+.main-content.page-m .form-area select,
+.main-content.page-m .form-area .form-select {
+    width: 100%;
+    min-height: 46px;
+    padding: 10px 13px;
+    border: 1px solid #cfd8e5;
+    border-radius: 7px;
+    background: #fff;
+    color: #27374d;
+    box-shadow: none;
+}
+
+.main-content.page-m .form-area input:focus,
+.main-content.page-m .form-area select:focus {
+    border-color: #1689b0;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(22, 137, 176, 0.12);
+}
+
+/* Stripe mount containers */
+.main-content.page-m .stripe-field,
+.main-content.page-m #card-element {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 46px;
+    padding: 13px;
+    border: 1px solid #cfd8e5;
+    border-radius: 7px;
+    background: #fff;
+}
+
+.main-content.page-m .stripe-field:focus-within,
+.main-content.page-m #card-element.StripeElement--focus {
+    border-color: #1689b0;
+    box-shadow: 0 0 0 3px rgba(22, 137, 176, 0.12);
+}
+
+/* Responsive: remove desktop alignment adjustment */
+@media (max-width: 991.98px) {
+    .main-content.page-m {
+        padding: 24px 20px 40px;
+    }
+
+    .main-content.page-m .section-content.section-content-p30.main-content-section {
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+        padding: 0;
+    }
+
+    .main-content.page-m .form-area {
+        padding: 22px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .main-content.page-m {
+        padding: 20px 12px 32px;
+    }
+
+    .main-content.page-m .form-area {
+        padding: 18px 16px;
+    }
+
+    .main-content.page-m .form-area h3 {
+        font-size: 18px;
+    }
+}

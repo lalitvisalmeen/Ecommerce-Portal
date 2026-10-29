@@ -10,7 +10,7 @@ import { CartItem } from '../../../common/cart-item/cart-items';
   imports: [CurrencyPipe, RouterLink],
   selector: 'app-product-details',
   styleUrl: './product-details.css',
-  templateUrl: './product-details.html',
+  templateUrl: './product-details-new.html',
 })
 export class ProductDetails {
   product = signal<Product | undefined>(undefined); // It tells typescipt, dont give me an error, i will assign a value later

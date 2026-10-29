@@ -1,0 +1,57 @@
+<div class="main-content product-detail-page">
+  <div class="section-content section-content-p30 main-content-section">
+    <div class="container-fluid">
+
+      @if (product(); as p) {
+        <div class="product-detail-card">
+
+          <!-- Product image -->
+          <div class="product-detail-image">
+            <img
+              [src]="p.imageUrl"
+              [alt]="p.name"
+              class="detail-img"
+            />
+          </div>
+
+          <!-- Product information -->
+          <div class="product-detail-info">
+
+            <a routerLink="/products" class="back-to-products">
+              <i class="fa-solid fa-arrow-left"></i>
+              Back to products
+            </a>
+
+            <h2 class="product-detail-title">
+              {{ p.name }}
+            </h2>
+
+            <div class="product-detail-price">
+              {{ p.unitPrice | currency:'USD' }}
+            </div>
+
+            <div class="product-detail-divider"></div>
+
+            <h5 class="product-detail-description-title">
+              Product Description
+            </h5>
+
+            <p class="product-detail-description">
+              {{ p.description }}
+            </p>
+
+            <button
+              (click)="addToCart()"
+              class="btn product-detail-add-btn"
+            >
+              <i class="fa-solid fa-cart-shopping"></i>
+              Add to Cart
+            </button>
+
+          </div>
+        </div>
+      }
+
+    </div>
+  </div>
+</div>

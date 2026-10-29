@@ -6,7 +6,8 @@
         border:10px solid #205b8d;
         -webkit-border-radius:3px;
         -moz-border-radius:3px;
-        border-radius:30px;
+        border-radius:10px;
+        font-weight: 600;
         background:#205b8d
     }
 
@@ -37,8 +38,8 @@
 }
 
 .account-avatar {
-    width: 40px;
-    height: 40px;
+    width: 35px;
+    height: 35px;
     border-radius: 50%;
     border: 1px solid #ccc;
     background: white;

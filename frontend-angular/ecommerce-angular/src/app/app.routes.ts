@@ -6,8 +6,10 @@ import { Checkout } from './components/checkout/checkout';
 import { Members } from './components/members/members';
 import { AuthGuard } from '@auth0/auth0-angular';
 import { OrderHistoryComponent } from './components/order-history/order-history';
+import { LoginCallback } from './components/login-callback/login-callback';
 
 export const routes: Routes = [
+    { path: 'login/callback', component: LoginCallback },
     { path: "orders", component: OrderHistoryComponent, canActivate: [AuthGuard]},
     { path: "checkout", component: Checkout, canActivate: [AuthGuard] },
     { path: "members", component: Members, canActivate: [AuthGuard] },

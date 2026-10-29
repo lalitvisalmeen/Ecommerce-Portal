@@ -1,0 +1,34 @@
+
+<div class="category-dropdown">
+  <button
+    type="button"
+    class="category-dropdown-toggle"
+    (click)="toggleDropdown()"
+    [attr.aria-expanded]="isDropdownOpen"
+    aria-controls="categoryDropdownMenu">
+
+    Products
+    <i
+      class="fa"
+      [class.fa-chevron-down]="!isDropdownOpen"
+      [class.fa-chevron-up]="isDropdownOpen"
+      aria-hidden="true">
+    </i>
+  </button>
+
+  @if (isDropdownOpen) {
+    <ul id="categoryDropdownMenu" class="category-dropdown-menu">
+      @for (category of categories(); track category.id) {
+        <li>
+          <a
+            routerLink="/category/{{ category.id }}/{{ category.categoryName }}"
+            routerLinkActive="active-link"
+            class="category-dropdown-link"
+            (click)="closeDropdown()">
+            {{ category.categoryName }}
+          </a>
+        </li>
+      }
+    </ul>
+  }
+</div>

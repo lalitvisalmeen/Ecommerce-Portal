@@ -4,9 +4,10 @@ import { ProductCategoryComponent } from './components/product-category/product-
 import { SearchProduct } from './components/search-product/search-product';
 import { CartStatus } from './components/cart-status/cart-status';
 import { LoginStatus } from './components/login-status/login-status';
+import { CategoryDropdown } from './components/category-dropdown/category-dropdown';
 
 @Component({
-  imports: [RouterOutlet, ProductCategoryComponent, SearchProduct, CartStatus, RouterLinkWithHref, LoginStatus],
+  imports: [RouterOutlet, SearchProduct, CartStatus, RouterLinkWithHref, LoginStatus, CategoryDropdown],
   selector: 'app-root',
   styleUrl: './app.css',
   templateUrl: './app.html',
