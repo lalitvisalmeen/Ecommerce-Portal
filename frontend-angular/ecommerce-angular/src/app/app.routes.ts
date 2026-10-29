@@ -7,6 +7,7 @@ import { Members } from './components/members/members';
 import { AuthGuard } from '@auth0/auth0-angular';
 import { OrderHistoryComponent } from './components/order-history/order-history';
 import { LoginCallback } from './components/login-callback/login-callback';
+import { OrderDetails } from './components/order-details/order-details';
 
 export const routes: Routes = [
     { path: 'login/callback', component: LoginCallback },
@@ -14,6 +15,7 @@ export const routes: Routes = [
     { path: "checkout", component: Checkout, canActivate: [AuthGuard] },
     { path: "members", component: Members, canActivate: [AuthGuard] },
     { path: "cart-details", component: CartDetails },
+    { path: "orders/:id", component: OrderDetails, canActivate: [AuthGuard] },
     { path: "products/:id", component: ProductDetails },
     { path: "search/:keyword", component: ProductList },
     { path: "category/:id/:name", component: ProductList },

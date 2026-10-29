@@ -3,6 +3,7 @@ import { OrderHistoryService } from '../../services/order-history/order-history-
 import { OrderHistory } from '../../common/order-history/order-history';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { NotficationService } from '../../services/notification/notfication-service';
 
 @Component({
   imports: [CurrencyPipe, DatePipe, RouterLink],
@@ -15,6 +16,7 @@ export class OrderHistoryComponent {
   storage: Storage = sessionStorage;
   orderHistoryService = inject(OrderHistoryService);
   orders = signal<OrderHistory[]>([]);
+  notificationService = inject(NotficationService);
 
   ngOnInit() :void{
     this.listOrders();

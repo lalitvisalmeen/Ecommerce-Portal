@@ -199,8 +199,6 @@ export class Checkout {
         billingAddress.zipcode);
     }
 
-    console.log("Address is ", purchase.billingAddress);
-
     // populate purchase - order and order items
     purchase.order = order;
     purchase.orderItems = orderItems;

@@ -1,0 +1,215 @@
+<div class="main-content">
+    `<div class="section-content section-content-p30 main-content-section">
+
+        <div class="container-fluid">
+            @if (order(); as orderDetails) {
+
+            <!-- Page heading -->
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+                <div>
+                    <h2 class="mb-1">Order Details</h2>
+                    <p class="text-muted mb-0">Thank you for shopping with us.</p>
+                </div>
+
+                <a routerLink="/orders" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>
+                    Back to My Orders
+                </a>
+            </div>
+
+            <!-- Order summary -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <div class="row g-4 align-items-center">
+
+                        <div class="col-md-4">
+                            <div class="text-muted small mb-1">Order Tracking Number</div>
+                            <div class="fw-semibold text-break">
+                                {{ orderDetails.orderTrackingNumber }}
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="text-muted small mb-1">Order Date</div>
+                            <div class="fw-semibold">
+                                {{ orderDetails.createdDate | date:'mediumDate' }}
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="text-muted small mb-1">Items</div>
+                            <div class="fw-semibold">
+                                {{ orderDetails.totalQuantity }}
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="text-muted small mb-2">Order Status</div>
+
+                            <span class="badge rounded-pill px-3 py-2"
+                                [class.bg-info]="orderDetails.status?.toLowerCase() === 'submitted'"
+                                [class.text-dark]="orderDetails.status?.toLowerCase() === 'submitted'"
+                                [class.bg-success]="orderDetails.status?.toLowerCase() === 'delivered'"
+                                [class.bg-primary]="orderDetails.status?.toLowerCase() === 'shipped'"
+                                [class.bg-warning]="orderDetails.status?.toLowerCase() === 'pending'"
+                                [class.text-dark]="orderDetails.status?.toLowerCase() === 'pending'"
+                                [class.bg-secondary]="!['submitted', 'delivered', 'shipped', 'pending'].includes(orderDetails.status?.toLowerCase() ?? '')">
+                                {{ orderDetails.status || 'Submitted' }}
+                            </span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4">
+
+                <!-- Ordered products -->
+                <div class="col-lg-8">
+
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-white border-0 px-4 pt-4 pb-2">
+                            <h5 class="mb-0">Items Ordered</h5>
+                        </div>
+
+                        <div class="card-body px-4">
+                            @for (item of orderDetails.orderItems ?? []; track item.productId) {
+
+                            <div class="row align-items-center py-3 g-3">
+
+                                <!-- Product image -->
+                                <div class="col-4 col-sm-3 col-md-2">
+                                    <img [src]="item.imageUrl" [alt]="item.productName" class="img-fluid rounded border"
+                                        style="width: 100%; height: 100px; object-fit: contain;" />
+                                </div>
+
+                                <!-- Product information -->
+                                <div class="col-8 col-sm-9 col-md-6">
+                                    <h6 class="mb-2">{{ item.productName }}</h6>
+                                    <div class="text-muted small mb-1">
+                                        Unit price: {{ item.unitPrice | currency:'CAD' }}
+                                    </div>
+                                    <div class="text-muted small">
+                                        Quantity: {{ item.quantity }}
+                                    </div>
+                                </div>
+
+                                <!-- Item subtotal -->
+                                <div class="col-12 col-md-4 text-md-end">
+                                    <div class="text-muted small mb-1">Item Total</div>
+                                    <div class="fw-bold">
+                                        {{ item.unitPrice * item.quantity | currency:'CAD' }}
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <hr class="my-1" />
+
+                            } @empty {
+                            <p class="text-muted mb-0 py-3">
+                                No items were found for this order.
+                            </p>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Shipping and billing addresses -->
+                    <div class="row g-4 mb-4">
+
+                        <div class="col-md-6">
+                            <div class="card border-0 shadow-sm h-100">
+                                <div class="card-body p-4">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <i class="fas fa-truck text-primary me-2"></i>
+                                        <h5 class="mb-0">Shipping Address</h5>
+                                    </div>
+
+                                    @if (orderDetails.shippingAddress; as shipping) {
+                                    <p class="mb-1 fw-semibold">{{ shipping.street }}</p>
+                                    <p class="mb-1">
+                                        {{ shipping.city }}{{ shipping.state ? ', ' + shipping.state : '' }}
+                                    </p>
+                                    <p class="mb-1">{{ shipping.country }}</p>
+                                    <p class="text-muted mb-0">{{ shipping.zipCode }}</p>
+                                    } @else {
+                                    <p class="text-muted mb-0">Shipping address unavailable.</p>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="card border-0 shadow-sm h-100">
+                                <div class="card-body p-4">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <i class="fas fa-file-invoice text-primary me-2"></i>
+                                        <h5 class="mb-0">Billing Address</h5>
+                                    </div>
+
+                                    @if (orderDetails.billingAddress; as billing) {
+                                    <p class="mb-1 fw-semibold">{{ billing.street }}</p>
+                                    <p class="mb-1">
+                                        {{ billing.city }}{{ billing.state ? ', ' + billing.state : '' }}
+                                    </p>
+                                    <p class="mb-1">{{ billing.country }}</p>
+                                    <p class="text-muted mb-0">{{ billing.zipCode }}</p>
+                                    } @else {
+                                    <p class="text-muted mb-0">Billing address unavailable.</p>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Price summary -->
+                <div class="col-lg-4">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body p-4">
+                            <h5 class="mb-4">Order Summary</h5>
+
+                            <div class="d-flex justify-content-between mb-3">
+                                <span class="text-muted">Total items</span>
+                                <span>{{ orderDetails.totalQuantity }}</span>
+                            </div>
+
+                            <div class="d-flex justify-content-between mb-3">
+                                <span class="text-muted">Order status</span>
+                                <span class="fw-semibold">{{ orderDetails.status || 'Submitted' }}</span>
+                            </div>
+
+                            <hr />
+
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-semibold">Total Amount</span>
+                                <span class="fs-4 fw-bold text-primary">
+                                    {{ orderDetails.totalPrice | currency:'CAD' }}
+                                </span>
+                            </div>
+
+                            <p class="text-muted small mt-3 mb-0">
+                                Your order details and delivery address are shown here for your reference.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            } @else {
+
+            <div class="text-center py-5">
+                <div class="spinner-border text-primary mb-3" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="text-muted">Loading order details...</p>
+            </div>
+
+            }
+
+        </div>
+    </div>`
+
+</div>
