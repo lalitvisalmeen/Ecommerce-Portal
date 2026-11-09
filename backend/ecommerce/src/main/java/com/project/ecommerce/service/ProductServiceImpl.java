@@ -1,12 +1,15 @@
 package com.project.ecommerce.service;
 
 import com.project.ecommerce.dao.ProductRepository;
+import com.project.ecommerce.dto.ProductSearchDto;
 import com.project.ecommerce.entity.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -38,6 +41,11 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public Page<Product> searchByProductName(String name, Pageable pageable) {
         return productRepository.findByNameContaining(name, pageable);
+    }
+
+    @Override
+    public List<Product> searchProducts(String productName, String categoryName, BigDecimal maxPrice, Boolean inStock) {
+        return productRepository.searchProduct(productName, categoryName, maxPrice, inStock);
     }
 
 
