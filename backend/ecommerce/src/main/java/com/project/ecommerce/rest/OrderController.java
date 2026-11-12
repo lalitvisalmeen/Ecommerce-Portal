@@ -14,19 +14,18 @@ public class OrderController {
     private OrderService orderService;
 
     @Autowired
-    public OrderController(OrderService orderService){
+    public OrderController(OrderService orderService) {
         this.orderService = orderService;
     }
 
     @GetMapping("/search")
-    public Page<Order> getCustomerOrders(@RequestParam("email") String email, Pageable pageable){
+    public Page<Order> getCustomerOrders(@RequestParam("email") String email, Pageable pageable) {
         return this.orderService.findOrderByCustomerEmail(email, pageable);
     }
 
     @GetMapping("/{id}")
-    public Order findOrderByTrackingNumber(@PathVariable Long id){
+    public Order findOrderByTrackingNumber(@PathVariable Long id) {
+
         return this.orderService.findOrderById(id);
     }
-
-
 }

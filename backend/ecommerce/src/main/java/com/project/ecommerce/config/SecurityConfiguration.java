@@ -3,6 +3,7 @@ package com.project.ecommerce.config;
 import com.okta.spring.boot.oauth.Okta;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -17,7 +18,8 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         // protect the endpoints
         http.authorizeHttpRequests( requests ->
-                    requests.requestMatchers("/api/orders/**", "/api/checkout/**")
+                    requests.requestMatchers(HttpMethod.POST, "/api/chat").permitAll()
+                        .requestMatchers("/api/orders/**", "/api/checkout/**","/api/test-auth")
                             .authenticated()
                             .anyRequest()
                             .permitAll())

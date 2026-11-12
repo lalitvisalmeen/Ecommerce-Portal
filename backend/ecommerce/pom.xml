@@ -29,6 +29,7 @@
 	<properties>
 		<java.version>25</java.version>
 		<netty.version>4.2.19.Final</netty.version>
+		<postgresql.version>42.7.14</postgresql.version>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
@@ -136,6 +137,25 @@
 <!--			<artifactId>spring-boot-starter-data-rest-test</artifactId>-->
 <!--			<scope>test</scope>-->
 <!--		</dependency>-->
+
+		<!-- JDBC support for the PostgreSQL vector store -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jdbc</artifactId>
+		</dependency>
+
+		<!-- PostgreSQL JDBC driver -->
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<!-- Spring AI pgvector implementation -->
+		<dependency>
+			<groupId>org.springframework.ai</groupId>
+			<artifactId>spring-ai-pgvector-store</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>

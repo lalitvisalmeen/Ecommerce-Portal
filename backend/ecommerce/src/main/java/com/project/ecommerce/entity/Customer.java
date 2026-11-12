@@ -29,6 +29,9 @@ public class Customer {
     @Column(name="email")
     private String email;
 
+    @Column(name="auth0_user_id", unique = true)
+    private String auth0UserId;
+
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<Order> orders = new HashSet<>();

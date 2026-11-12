@@ -3,6 +3,7 @@ package com.project.ecommerce.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.web.filter.PreFlightRequestFilter;
@@ -57,6 +58,7 @@ public class Order {
     private Address shippingAddress;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @BatchSize(size = 10)
     private Set<OrderItem> orderItems = new HashSet<>();
 
     public void add(OrderItem item){

@@ -29,7 +29,7 @@ public class CheckoutServiceImpl implements CheckoutService{
     }
     @Override
     @Transactional
-    public PurchaseResponse placeOrder(Purchase purchase) {
+    public PurchaseResponse placeOrder(Purchase purchase, String auth0UserId, String email) {
 
         // retrieve order from dto
         Order order = purchase.getOrder();
@@ -44,14 +44,21 @@ public class CheckoutServiceImpl implements CheckoutService{
         order.setShippingAddress(purchase.getShippingAddress());
         order.setStatus("Submitted");
 
-        // Include customer to order
-        Customer customer = purchase.getCustomer();
-        // check if the customer is available in db
-        Customer customerFromDB = customerRepository.findByEmail(customer.getEmail());
-        if(customerFromDB != null){
-            // if the customer exists in db, then replace customer with the existing customer
-            customer = customerFromDB;
+        // check if the customer is available in db using auth0 User id that is coming along with the access token
+        Customer customer = customerRepository.findByAuth0UserId(auth0UserId);
+        if(customer == null){
+            // if the customer does not exists in db, then create new customer
+            // this is much more reliable than sending the email from a checkout form
+            // Include customer to order
+            customer = new Customer();
+            Customer checkoutCustomer = purchase.getCustomer();
+            customer.setFirstName(checkoutCustomer.getFirstName());
+            customer.setLastName(checkoutCustomer.getLastName());
+            customer.setEmail(email);
+            customer.setAuth0UserId(auth0UserId);
+
         }
+
         customer.add(order);
 
         // save the details to the db
