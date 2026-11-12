@@ -1,0 +1,158 @@
+<div class="chat-page">
+    <div class="chat-container">
+
+        <!-- Header -->
+        <div class="chat-header">
+            <div class="assistant-avatar">
+                <i class="fas fa-robot"></i>
+            </div>
+
+            <div class="header-info">
+                <h4>Shopping Assistant</h4>
+                <span class="assistant-status">
+                    <span class="status-dot"></span>
+                    AI assistant · Ready to help
+                </span>
+            </div>
+
+            <div class="header-actions">
+                <span class="ai-label">AI powered</span>
+                <button
+        type="button"
+        class="chat-minimize-btn"
+        (click)="minimizeChat()"
+        aria-label="Minimize chat">
+        <i class="fas fa-minus"></i>
+    </button>
+            </div>
+        </div>
+
+        <!-- Chat body -->
+        <div class="chat-body" #messagesContainer>
+
+            <!-- Welcome screen -->
+            @if (messages.length === 0) {
+                <div class="welcome-section">
+
+                    <div class="welcome-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+
+                    <h2>How can I help you today?</h2>
+
+                    <p>
+                        Ask me about products, recommendations,
+                        shopping, or store policies.
+                    </p>
+
+                    <div class="suggestion-list">
+                        @for (question of suggestedQuestions; track question) {
+                            <button
+                                type="button"
+                                class="suggestion-button"
+                                (click)="useSuggestion(question)">
+
+                                <span>{{ question }}</span>
+                                <i class="fas fa-arrow-up-right-from-square"></i>
+                            </button>
+                        }
+                    </div>
+
+                </div>
+            }
+
+            <!-- Conversation messages -->
+            @for (message of messages(); track message.id) {
+
+                <div
+                    class="message-row"
+                    [class.user-row]="message.role === 'user'"
+                    [class.assistant-row]="message.role === 'assistant'">
+
+                    @if (message.role === 'assistant') {
+                        <div class="message-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                    }
+
+                    <div class="message-content">
+                        <div class="message-label">
+                            {{ message.role === 'user' ? 'You' : 'Shopping Assistant' }}
+                        </div>
+
+                        <div
+                            class="message-bubble"
+                            [class.user-bubble]="message.role === 'user'"
+                            [class.assistant-bubble]="message.role === 'assistant'">
+
+                            {{ message.content }}
+
+                        </div>
+                    </div>
+
+                </div>
+            }
+
+            <!-- Loading indicator -->
+            @if (loading) {
+                <div class="message-row assistant-row">
+                    <div class="message-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+
+                    <div class="message-content">
+                        <div class="message-label">Shopping Assistant</div>
+
+                        <div class="message-bubble assistant-bubble typing-bubble">
+                            <span class="typing-dot"></span>
+                            <span class="typing-dot"></span>
+                            <span class="typing-dot"></span>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            @if (errorMessage) {
+                <div class="chat-error">
+                    <i class="fas fa-exclamation-circle"></i>
+                    {{ errorMessage }}
+                </div>
+            }
+
+        </div>
+
+        <!-- Input area -->
+        <div class="chat-input-section">
+
+            <form
+                class="chat-input-form"
+                (ngSubmit)="sendMessage()">
+
+                <textarea
+                    [(ngModel)]="userMessage"
+                    name="userMessage"
+                    placeholder="Ask me anything about shopping..."
+                    rows="1"
+                    [disabled]="loading"
+                    (keydown)="handleEnter($event)">
+                </textarea>
+
+                <button
+                    type="submit"
+                    class="send-button"
+                    [disabled]="!userMessage.trim() || loading"
+                    aria-label="Send message">
+
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+
+            </form>
+
+            <p class="chat-disclaimer">
+                AI responses may not always be accurate. Please verify important details.
+            </p>
+
+        </div>
+
+    </div>
+</div>

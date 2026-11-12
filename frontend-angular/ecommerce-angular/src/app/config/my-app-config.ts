@@ -14,7 +14,8 @@ export default {
     httpInterceptor: {
         allowedList: [
             environment.backendApiUrl+'/orders/**',
-            environment.backendApiUrl+'/checkout/purchase'
+            environment.backendApiUrl+'/checkout/purchase',
+            environment.backendApiUrl+'/chat'
         ],
     }
 

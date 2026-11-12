@@ -5,9 +5,10 @@ import { SearchProduct } from './components/search-product/search-product';
 import { CartStatus } from './components/cart-status/cart-status';
 import { LoginStatus } from './components/login-status/login-status';
 import { CategoryDropdown } from './components/category-dropdown/category-dropdown';
+import { ChatAgent } from './components/chat-agent/chat-agent';
 
 @Component({
-  imports: [RouterOutlet, SearchProduct, CartStatus, RouterLinkWithHref, LoginStatus, CategoryDropdown],
+  imports: [RouterOutlet, SearchProduct, CartStatus, RouterLinkWithHref, LoginStatus, CategoryDropdown, ChatAgent],
   selector: 'app-root',
   styleUrl: './app.css',
   templateUrl: './app.html',

@@ -10,3 +10,28 @@
 .footer-pagination .col-md-3 select {
     min-width: 65px;
 }
+
+.empty-state {
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    margin: 20px 0;
+    padding: 60px 20px !important;
+}
+
+.empty-state-icon {
+    font-size: 42px;
+    color: #adb5bd;
+}
+
+.empty-state h5 {
+    font-weight: 600;
+    color: #343a40;
+}
+
+.empty-state p {
+    font-size: 14px;
+    max-width: 450px;
+    margin: 0 auto;
+}
+
