@@ -133,16 +133,16 @@ A few parts of this project needed more thought than standard product and checko
 ## Screenshots
 
 ### Product Catalog
-_Screenshot to be added._
+<img width="1510" height="881" alt="Screenshot 2026-11-18 at 10 57 02 AM" src="https://github.com/user-attachments/assets/f2856c97-2c30-4155-a87f-cf4c0df58903" />
 
 ### Shopping Cart and Checkout
-_Screenshots to be added._
+<img width="1493" height="721" alt="Screenshot 2026-11-18 at 11 00 30 AM" src="https://github.com/user-attachments/assets/4ffe6d03-2867-48ff-9aaa-46b13b414c9d" />
 
 ### Order History
-_Screenshot to be added._
+<img width="1503" height="853" alt="Screenshot 2026-11-18 at 11 01 52 AM" src="https://github.com/user-attachments/assets/b55804b9-2ff6-48de-8bf3-9fc373d018b0" />
 
 ### AI Shopping Assistant
-_Screenshots of product search and order inquiries to be added._
+<img width="1487" height="841" alt="Screenshot 2026-11-18 at 11 03 26 AM" src="https://github.com/user-attachments/assets/a22b87e5-2557-49ba-8e7f-47599bd8b2bd" />
 
 ## Demo
 
