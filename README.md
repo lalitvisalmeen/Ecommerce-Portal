@@ -144,12 +144,6 @@ A few parts of this project needed more thought than standard product and checko
 ### AI Shopping Assistant
 <img width="1487" height="841" alt="Screenshot 2026-11-18 at 11 03 26 AM" src="https://github.com/user-attachments/assets/a22b87e5-2557-49ba-8e7f-47599bd8b2bd" />
 
-## Demo
-
-The application currently runs in a local development environment. The demo will cover browsing, authentication, cart, checkout, order history, and AI-assisted product search.
-
-_Demo recording to be added._
-
 ## Running Locally
 
 ### Prerequisites
