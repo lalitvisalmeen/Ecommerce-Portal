@@ -108,46 +108,72 @@ flowchart TB
     User([Customer])
 
     subgraph FE["Angular 22 Frontend"]
-        direction LR
-        UI["Shop UI<br/>Routing · Cart service · Reactive forms"]
-        Chat["Chat UI<br/>RxJS inactivity timer"]
+        Browse["Product list + pagination"]
+        Search["Product search"]
+        Cart["Cart: add / remove / qty<br/>(Angular service, client-side)"]
+        Checkout["Checkout form<br/>customer, shipping, billing"]
+        Elements["Stripe Elements<br/>card details"]
+        Orders["Order history"]
+        ChatUI["AI chat assistant"]
     end
 
-    Auth0["Auth0<br/>OAuth2 Authorization Code + PKCE"]
-    Stripe["Stripe<br/>Payment Intents · Elements"]
+    Auth0["Auth0<br/>Hosted login, OAuth2 + PKCE<br/>issues access token"]
 
     subgraph BE["Spring Boot 4 Backend"]
-        Sec["Spring Security<br/>JWT Resource Server"]
-        Ctrl["REST Controllers"]
-        Svc["Service Layer<br/>Product · Checkout · Customer · Order"]
-        Repo["Repository Layer<br/>Spring Data JPA / Hibernate"]
-
-        subgraph AI["AI Shopping Assistant (Spring AI)"]
-            direction LR
-            SAI["ChatClient +<br/>MessageWindowChatMemory"]
-            Tools["Tools<br/>Product search · Order lookup"]
-            Sched["Scheduled cleanup<br/>ConcurrentHashMap + ReentrantLock"]
-        end
+        ProductAPI["Product API"]
+        Sec["Spring Security<br/>JWT validation"]
+        CheckoutAPI["Checkout API"]
+        OrderAPI["Order API"]
+        ChatAPI["Chat API"]
+        ProductSvc["Product Service"]
+        OrderSvc["Checkout and<br/>Order Services"]
+        SAI["Spring AI<br/>ChatClient + chat memory"]
+        Tools["Chat tools (read-only)<br/>product info and list,<br/>order info and list"]
+        Repo["Spring Data JPA"]
     end
 
     DB[("MySQL")]
-    Ollama["Ollama<br/>Qwen3 (local LLM)"]
+    Stripe["Stripe<br/>Payment Intents"]
+    Ollama["Ollama<br/>Qwen3 (local)"]
 
     User --> FE
-    FE -- "Login redirect / access token" --> Auth0
-    FE -- "REST + Bearer JWT" --> Sec
-    FE -- "Confirm payment" --> Stripe
-    Sec -. "Validate JWT" .-> Auth0
-    Sec --> Ctrl
-    Ctrl --> Svc
-    Svc --> Repo --> DB
-    Svc -- "Create Payment Intent" --> Stripe
-    Ctrl -- "Chat endpoint" --> SAI
+    FE -. "login redirect,<br/>token returned" .-> Auth0
+
+    Browse -- "public" --> ProductAPI
+    Search -- "public" --> ProductAPI
+    Checkout -- "access token" --> Sec
+    Orders -- "access token" --> Sec
+    ChatUI -- "access token" --> Sec
+    Sec -. "validate" .-> Auth0
+    Sec --> CheckoutAPI
+    Sec --> OrderAPI
+    Sec --> ChatAPI
+
+    ProductAPI --> ProductSvc
+    CheckoutAPI --> OrderSvc
+    OrderAPI --> OrderSvc
+    ChatAPI --> SAI
+    SAI -- "tool calls" --> Tools
+    Tools --> ProductSvc
+    Tools -- "scoped to user's sub" --> OrderSvc
     SAI <--> Ollama
-    SAI -- "Tool calls" --> Tools
-    Tools -- "Calls existing services<br/>(scoped to JWT sub)" --> Svc
-    Sched -. "Clear expired conversations" .-> SAI
+
+    ProductSvc --> Repo
+    OrderSvc --> Repo
+    Repo --> DB
+    CheckoutAPI -- "create Payment Intent" --> Stripe
+    Elements -- "card details, confirm payment" --> Stripe
+
+    classDef pub fill:#e6f4ea,stroke:#2e7d32,color:#111
+    classDef stripeNode fill:#ede7f6,stroke:#5e35b1,color:#111
+    classDef prot fill:#fff3e0,stroke:#ef6c00,color:#111
+    class Browse,Search,Cart,ProductAPI pub
+    class Elements stripeNode
+    class Checkout,Orders,ChatUI,Sec,CheckoutAPI,OrderAPI,ChatAPI prot
 ```
+
+_Green: public endpoints. Orange: protected endpoints that require the Auth0 access token. Purple: Stripe Elements, where card details go directly to Stripe and never through my backend. The backend only creates the Payment Intent. The cart lives in the Angular app until checkout._
+
 
 | Component | Responsibility |
 |---|---|
