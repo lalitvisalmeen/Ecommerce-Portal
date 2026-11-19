@@ -103,7 +103,51 @@ The assistant runs Qwen3 through Ollama. I chose local execution so the AI featu
 
 The application is layered: frontend components, REST controllers, business services, and persistence.
 
-> Architecture diagram to be added.
+```mermaid
+flowchart TB
+    User([Customer])
+
+    subgraph FE["Angular 22 Frontend"]
+        direction LR
+        UI["Shop UI<br/>Routing · Cart service · Reactive forms"]
+        Chat["Chat UI<br/>RxJS inactivity timer"]
+    end
+
+    Auth0["Auth0<br/>OAuth2 Authorization Code + PKCE"]
+    Stripe["Stripe<br/>Payment Intents · Elements"]
+
+    subgraph BE["Spring Boot 4 Backend"]
+        Sec["Spring Security<br/>JWT Resource Server"]
+        Ctrl["REST Controllers"]
+        Svc["Service Layer<br/>Product · Checkout · Customer · Order"]
+        Repo["Repository Layer<br/>Spring Data JPA / Hibernate"]
+
+        subgraph AI["AI Shopping Assistant (Spring AI)"]
+            direction LR
+            SAI["ChatClient +<br/>MessageWindowChatMemory"]
+            Tools["Tools<br/>Product search · Order lookup"]
+            Sched["Scheduled cleanup<br/>ConcurrentHashMap + ReentrantLock"]
+        end
+    end
+
+    DB[("MySQL")]
+    Ollama["Ollama<br/>Qwen3 (local LLM)"]
+
+    User --> FE
+    FE -- "Login redirect / access token" --> Auth0
+    FE -- "REST + Bearer JWT" --> Sec
+    FE -- "Confirm payment" --> Stripe
+    Sec -. "Validate JWT" .-> Auth0
+    Sec --> Ctrl
+    Ctrl --> Svc
+    Svc --> Repo --> DB
+    Svc -- "Create Payment Intent" --> Stripe
+    Ctrl -- "Chat endpoint" --> SAI
+    SAI <--> Ollama
+    SAI -- "Tool calls" --> Tools
+    Tools -- "Calls existing services<br/>(scoped to JWT sub)" --> Svc
+    Sched -. "Clear expired conversations" .-> SAI
+```
 
 | Component | Responsibility |
 |---|---|
